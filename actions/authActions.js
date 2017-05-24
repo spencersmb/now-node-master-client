@@ -24,10 +24,13 @@ export const validateUserToken = user => {
 export const signinUser = user => async dispatch => {
   try {
     const response = await authApi.signInUser(user)
-    setToken(response.token)
+    console.log('signin User action')
+    console.log(response)
+
+    // setToken(response.token)
     return dispatch({
       type: actionTypes.LOGIN_SUCCESS,
-      user: getUserFromLocalStorage()
+      user: { ...response }
     })
   } catch (e) {
     throw e
@@ -59,10 +62,18 @@ export const SaveUser = user => dispatch => {
 }
 
 // Used on the auth/sign-off.js
-export const logUserOut = () => {
-  unsetToken()
-  // logout()
-  return { type: actionTypes.LOG_OUT }
+export const logUserOut = () => async dispatch => {
+  try {
+    const response = await authApi.signOutUser()
+    console.log('R from logUserOut Action')
+    console.log(response)
+
+    unsetToken()
+    // logout()
+    return dispatch({ type: actionTypes.LOG_OUT })
+  } catch (e) {
+    throw e
+  }
 }
 
 export const refreshUser = user => {

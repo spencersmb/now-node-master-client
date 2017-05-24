@@ -3,20 +3,16 @@ import env from '../config/envConfig'
 
 class authApi {
   static async signInUser (user) {
-    const url = `${env.BACKEND_URL}/signin`
-    // const token = window.localStorage.getItem('token')
+    const url = `${env.BACKEND_URL}/api/signin`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'cors',
+      // mode: 'cors',
       credentials: 'include', // Don't forget to specify this if you need cookies
       body: JSON.stringify(user)
     })
-
-    console.log('response')
-    console.log(response)
 
     const body = await response.json()
 
@@ -31,6 +27,30 @@ class authApi {
     }
     console.log(body)
 
+    return body
+  }
+  static async signOutUser () {
+    const url = `${env.BACKEND_URL}/signout`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // mode: 'cors',
+      credentials: 'include' // Don't forget to specify this if you need cookies
+    })
+
+    const body = await response.json()
+
+    if (response.status !== 200) {
+      console.log('error')
+
+      const error = {
+        message: body.message
+      }
+
+      throw error.message
+    }
     return body
   }
   static async registerUser (user) {

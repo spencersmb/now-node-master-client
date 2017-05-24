@@ -8,8 +8,7 @@
     "dev": "node server.js",
     "build": "next build",
     "watch": "nodemon server.js -w server.js",
-    "start": "next start -p $PORT",
-    "start-now-ex": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node server.js",
     "lint": "standard --verbose"
   },
   "standard": {
@@ -19,7 +18,7 @@
     ]
   },
   "engines": {
-    "node": "6.9.x"
+    "node": ">= 7.6.0"
   },
   "cacheDirectories": [
     "nextjs/node_modules"

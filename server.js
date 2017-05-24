@@ -94,14 +94,14 @@ if (prod) {
     // expressServer.use('/api', (req, res) => {
     //   apiProxy.web(req, res, { target: 'http://localhost:7777' })
     // })
-    expressServer.use('/api/*', (req, res) => {
+
+    expressServer.use('/api/**', (req, res) => {
       apiProxy.web(req, res, {
         target: 'http://localhost:7777/' + req.params[0]
       })
     })
-
-    // Other next-specific stuff
     expressServer.use(bodyParser.json())
+    // Other next-specific stuff
 
     // NEXT ROUTE EXAMPLE BELOW
     // page path in app is: /pages/store

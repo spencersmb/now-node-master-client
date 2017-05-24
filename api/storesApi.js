@@ -69,7 +69,9 @@ class StoreApi {
 
   static getStores () {
     return new Promise((resolve, reject) => {
-      fetch(`${env.BACKEND_URL}/stores`, {
+      const url = `${env.BACKEND_URL}/api/stores`
+
+      fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -89,18 +91,19 @@ class StoreApi {
     const formData = convertToFormData(store)
 
     return new Promise((resolve, reject) => {
-      // `${env.BACKEND_URL}/add`
-      fetch(`http://localhost:3000/api/add`, {
+      fetch(`${env.BACKEND_URL}/api/add`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
           // Authorization: `Bearer ${token}`
         },
-        mode: 'cors',
-        credentials: 'same-origin' // Don't forget to specify this if you need cookies
-        // body: formData
+        // mode: 'cors',
+        credentials: 'include', // Don't forget to specify this if you need cookies
+        body: formData
       })
         .then(r => {
+          console.log('add error')
+          console.log(r)
+
           let res = r.json()
 
           // res.then(resp => {

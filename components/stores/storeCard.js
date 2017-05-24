@@ -30,7 +30,7 @@ export default props => {
       </div>
       <div className='store__details'>
         {/* truncater hack */}
-        <p>{description.split(' ').slice(0, 25).join(' ')}</p>
+        {/* <p>{description.split(' ').slice(0, 25).join(' ')}</p> */}
       </div>
     </div>
   )

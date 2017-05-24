@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "pathname": "/api/**",
+      "dest": "api-testone.now.sh"
+    },
+    {
+      "dest": "frontend-testone.now.sh"
+    }
+  ]
+}
