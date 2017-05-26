@@ -1,7 +1,7 @@
 import React from 'react'
 import { initStore } from '../store'
 import withRedux from 'next-redux-wrapper'
-import standardLayout from '../hocs/standardLayout'
+import secureLayout from '../hocs/secureLayout'
 import InitializeFromStateForm from '../components/stores/storeForm'
 import { getStores } from '../actions/storesActions'
 
@@ -22,5 +22,5 @@ class editStoreForm extends React.Component {
 }
 
 export default withRedux(initStore, null)(
-  standardLayout(editStoreForm, 'Create Store')
+  secureLayout(editStoreForm, 'Create Store')
 )

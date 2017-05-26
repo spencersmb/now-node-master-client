@@ -12,6 +12,8 @@ export const getTagsList = tag => async (dispatch, getState) => {
 }
 
 export const getSingleStore = slug => async (dispatch, getState) => {
+  console.log('get single store')
+
   let state = getState()
 
   // if nothing is there make api call and then return single store
@@ -21,6 +23,7 @@ export const getSingleStore = slug => async (dispatch, getState) => {
       dispatch(loadSingleStoreSuccess(store))
       return store[0]
     } catch (e) {
+      // handleError(e, dispatch)
       throw e
     }
   }
@@ -46,7 +49,7 @@ export const getStores = () => (dispatch, getState) => {
 }
 
 export const addStore = store => dispatch => {
-  return StoreApi.addStore(store)
+  return StoreApi.addStore(store, dispatch)
     .then(res => {
       /*
         On sucess dispatch call and redirect

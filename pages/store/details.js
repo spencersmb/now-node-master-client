@@ -4,9 +4,13 @@ import { initStore } from '../../store'
 import withRedux from 'next-redux-wrapper'
 import standardLayout from '../../hocs/standardLayout'
 import { getSingleStore, getStores } from '../../actions/storesActions'
-import { toastr } from 'react-redux-toastr'
+import { handleError } from '../../utils/authUtils'
 
 const pageTitle = 'Our Store'
+
+//this works but not on server side....
+// On secure HOC - ComponentDid mount must check if user logged in. Our Error hander will just log user out,
+// but the HOC will reRoute
 
 class StorePage extends React.Component {
   static async getInitialProps ({ store, res, query }) {
@@ -23,7 +27,7 @@ class StorePage extends React.Component {
       */
       post = await store.dispatch(getSingleStore(slug))
     } catch (e) {
-      toastr.error('Error:', e)
+      handleError(e, store)
     }
 
     return { post }
@@ -59,17 +63,18 @@ class StorePage extends React.Component {
           <p className='single__location'>Location of store</p>
 
           <ul className='tags'>
-            {tags.map((tag, index) => (
-              <li key={tag + index} className='tag'>
-                <Link as={`/tags/${tag}`} href={`/tags?tag=${tag}`}>
+            {tags &&
+              tags.map((tag, index) => (
+                <li key={tag + index} className='tag'>
+                  <Link as={`/tags/${tag}`} href={`/tags?tag=${tag}`}>
 
-                  <a className='tag__link'>
-                    <span className='tag__text'>{tag}</span>
-                  </a>
+                    <a className='tag__link'>
+                      <span className='tag__text'>{tag}</span>
+                    </a>
 
-                </Link>
-              </li>
-            ))}
+                  </Link>
+                </li>
+              ))}
           </ul>
 
         </div>

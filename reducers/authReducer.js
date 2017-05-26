@@ -8,6 +8,8 @@ export const authReducer = (state = initialState.user, action) => {
         isAuthenticated: !state.isAuthenticated
       })
     case actionTypes.LOGIN_SUCCESS:
+      console.log('LOGIN SUCCESS REDUCER CALL')
+
       return Object.assign({}, state, {
         ...action.user,
         isAuthenticated: true

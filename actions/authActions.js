@@ -1,36 +1,52 @@
 import actionTypes from './actionTypes'
 import authApi from '../api/authApi'
 import {
+  isUserExpired,
   setToken,
   getUserFromLocalStorage,
+  getUserFromJWT,
   unsetToken
 } from '../utils/authUtils'
 // import { checkTokenExpiry, unsetToken } from '../utils/auth'
 // import { logout } from '../utils/lock'
 
-export const validateUserToken = user => {
+export const validateUserToken = (user, isServer) => {
+  console.log('validateUser', user)
+
   if (!user) {
     return { type: actionTypes.LOG_OUT }
   }
 
-  // if expired returns false it means its (expired)
-  // if (!checkTokenExpiry(user)) {
-  //   return logUserOut()
-  // }
+  // if expired returns true
+  if (isUserExpired(user)) {
+    console.log('user is expired')
+    // dispatch(logUserOut())
+    return logUserOut()
+  }
 
-  return { type: actionTypes.LOGIN_SUCCESS, user }
+  /*
+  If we are not on the server the user is already in redux, if on the server - its a hard
+  refresh so we need to populate redux
+  */
+  if (isServer) {
+    return { type: actionTypes.LOGIN_SUCCESS, user }
+  }
 }
 
 export const signinUser = user => async dispatch => {
+  console.log('signin user action first called')
+
   try {
     const response = await authApi.signInUser(user)
     console.log('signin User action')
-    console.log(response)
+    // console.log(response)
+    const decodedUser = getUserFromJWT(response.token)
+    // console.log('Decoded User', decodedUser)
 
     // setToken(response.token)
     return dispatch({
       type: actionTypes.LOGIN_SUCCESS,
-      user: { ...response }
+      user: { ...decodedUser }
     })
   } catch (e) {
     throw e
@@ -64,13 +80,13 @@ export const SaveUser = user => dispatch => {
 // Used on the auth/sign-off.js
 export const logUserOut = () => async dispatch => {
   try {
-    const response = await authApi.signOutUser()
-    console.log('R from logUserOut Action')
-    console.log(response)
+    // console.log(response)
 
     unsetToken()
-    // logout()
-    return dispatch({ type: actionTypes.LOG_OUT })
+    dispatch({ type: actionTypes.LOG_OUT })
+    const response = await authApi.signOutUser()
+    console.log('Async action signout')
+    return
   } catch (e) {
     throw e
   }

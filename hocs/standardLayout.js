@@ -5,17 +5,36 @@ import { connect } from 'react-redux'
 import Head from 'next/head'
 import env from '../config/envConfig'
 import ReduxToastr from 'react-redux-toastr'
-import { getUserFromLocalStorage, getUserFromCookie } from '../utils/authUtils'
-import { validateUserToken } from '../actions/authActions'
+import { getUserFromCookie, validateUserToken } from '../utils/authUtils'
+// import { validateUserToken } from '../actions/authActions'
 import { getStores } from '../actions/storesActions'
 
 export default (Page, title = '') => {
   class standardLayout extends React.Component {
     static async getInitialProps (ctx) {
-      // 1. Check storage for user
+      console.log('isServer')
+      console.log(ctx.isServer)
+      console.log(process.browser)
+      // validate should be normal function to test if we are on the server and if the token is expired
+      // if both are true dispatch logout
+      // if on server but token is good, dispatch loginSucess
+      // if server is false but token is expired - dispatch logout
       const loggedUser = process.browser
-        ? ''
-        : ctx.store.dispatch(validateUserToken(getUserFromCookie(ctx.req)))
+        ? validateUserToken(
+            process.browser,
+            ctx.store,
+            ctx.store.getState().user
+          )
+        : validateUserToken(
+            process.browser,
+            ctx.store,
+            getUserFromCookie(ctx.req)
+          )
+
+      // 1. Check user exp
+      // const loggedUser = process.browser
+      //   ? ctx.store.dispatch(validateUserToken(ctx.store.getState().user))
+      //   : ctx.store.dispatch(validateUserToken(getUserFromCookie(ctx.req)))
 
       const stores = process.browser
         ? ''
@@ -61,12 +80,16 @@ export default (Page, title = '') => {
 
     logout (eve) {
       if (eve.key === 'logout') {
-        Router.push(`/?logout=${eve.newValue}`)
+        Router.push(`/auth/login`, `/login`)
       }
     }
 
     componentDidMount () {
       window.addEventListener('storage', this.logout, false)
+
+      if (!this.props.user.isAuthenticated) {
+        // this.props.logOut()
+      }
     }
 
     componentWillUnmount () {
@@ -94,5 +117,12 @@ export default (Page, title = '') => {
       )
     }
   }
-  return connect()(standardLayout)
+
+  const mapStateToProps = (state, ownProps) => {
+    return {
+      user: state.user
+    }
+  }
+
+  return connect(mapStateToProps)(standardLayout)
 }

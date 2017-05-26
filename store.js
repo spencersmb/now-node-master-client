@@ -8,6 +8,7 @@ import { authReducer } from './reducers/authReducer'
 import { reducer as toastrReducer } from 'react-redux-toastr'
 import { editStoreReducer } from './reducers/editStoreReducer'
 import { tagsReducer } from './reducers/tagsReducer'
+import apiIntercepter from './middleware/apiIntercepter'
 
 export const initStore = (initialState = {}) => {
   // mirror of state from original app
@@ -27,9 +28,13 @@ export const initStore = (initialState = {}) => {
     return createStore(
       reducers,
       initialState,
-      composeWithDevTools(applyMiddleware(thunkMiddleware))
+      composeWithDevTools(applyMiddleware(thunkMiddleware, apiIntercepter))
     )
   }
 
-  return createStore(reducers, initialState, applyMiddleware(thunkMiddleware))
+  return createStore(
+    reducers,
+    initialState,
+    applyMiddleware(thunkMiddleware, apiIntercepter)
+  )
 }

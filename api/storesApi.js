@@ -2,15 +2,28 @@
 import env from '../config/envConfig'
 import fetch from 'isomorphic-unfetch'
 import FormData from 'form-data'
+import { fetchIntercepter } from './fetchWrapper'
 import { convertToFormData } from '../utils/storeHelpers'
 
-const handleErrors = response => {
+const handleStatusCheck = response => {
+  console.log('handleStatusCheck')
   console.log(response)
 
-  if (response.status !== 200) {
-    throw Error('Unable to save store')
+  const error = {
+    message: 'There was an error',
+    logout: false
   }
-  return response
+  if (response.status === 401) {
+    error.message = 'User not Authroized'
+    error.logout = true
+
+    throw error
+  }
+
+  if (response.status !== 200) {
+    error.message = response.statusText
+    throw error
+  }
 }
 
 const resolvePromiseError = (promise, reject) => {
@@ -19,7 +32,7 @@ const resolvePromiseError = (promise, reject) => {
 
 class StoreApi {
   static async getTagList (tag) {
-    const url = `${env.BACKEND_URL}/tags/${tag}`
+    const url = `${env.BACKEND_URL}/api/tags/${tag}`
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -44,8 +57,11 @@ class StoreApi {
      */
     return body
   }
+
   static async getSingleStore (slug) {
-    const url = `${env.BACKEND_URL}/store/${slug}`
+    console.log('Call singelstore')
+
+    const url = `${env.BACKEND_URL}/api/store/${slug}`
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -53,16 +69,19 @@ class StoreApi {
       }
     })
 
+    // status check must be above BODY variable
+    handleStatusCheck(response)
+
     // Resolve here to return the array below instead of store[]
     const body = await response.json()
 
-    if (response.status !== 200) {
-      const error = {
-        message: 'Could not find store'
-      }
+    // if (response.status !== 200) {
+    //   const error = {
+    //     message: 'Could not find store'
+    //   }
 
-      throw error.message
-    }
+    //   throw error.message
+    // }
 
     return body.store
   }
@@ -86,60 +105,90 @@ class StoreApi {
         })
     })
   }
-  static addStore (store) {
-    // Must create FormData when posting an image
-    const formData = convertToFormData(store)
 
-    return new Promise((resolve, reject) => {
-      fetch(`${env.BACKEND_URL}/api/add`, {
+  static async addStore (newStore, reduxStore) {
+    console.log(reduxStore)
+
+    // Must create FormData when posting an image
+    const formData = convertToFormData(newStore)
+
+    const url = `${env.BACKEND_URL}/api/add`
+    const response = await fetchIntercepter(
+      url,
+      {
         method: 'POST',
-        headers: {
-          // Authorization: `Bearer ${token}`
-        },
-        // mode: 'cors',
         credentials: 'include', // Don't forget to specify this if you need cookies
         body: formData
-      })
-        .then(r => {
-          console.log('add error')
-          console.log(r)
+      },
+      reduxStore
+    )
 
-          let res = r.json()
+    // handleStatusCheck(response)
 
-          // res.then(resp => {
-          //   console.log('Q')
-          //   console.log(resp.message)
-          // })
+    // Resolve here to return the array below instead of store[]
+    // const body = await response.json()
 
-          // FIRST TYPE
-          // if (r.status !== 200) {
-          //   res.then(r => {
-          //     // throw new Error(r.message)
-          //     reject(r.message)
-          //   })
-          // }
+    console.log('datafrom ADD API CALL', response)
 
-          // SECOND TYPE
-          if (r.status !== 200) {
-            resolvePromiseError(res, reject)
-          }
+    return response.data
 
-          return res
-        })
-        .then(res => {
-          resolve(res)
-        })
-        .catch(e => {
-          reject(e)
-        })
-    })
+    // return new Promise((resolve, reject) => {
+    //   // fetchIntercepter(`${env.BACKEND_URL}/api/add`, {
+    //   //   method: 'POST',
+    //   //   credentials: 'include', // Don't forget to specify this if you need cookies
+    //   //   body: formData
+    //   // }).then(e => {
+    //   //   console.log('2nd call')
+    //   // })
+    //   fetch(`${env.BACKEND_URL}/api/add`, {
+    //     method: 'POST',
+    //     headers: {
+    //       // Authorization: `Bearer ${token}`
+    //     },
+    //     // mode: 'cors',
+    //     credentials: 'include', // Don't forget to specify this if you need cookies
+    //     body: formData
+    //   })
+    //     .then(r => {
+    //       console.log('add error')
+    //       console.log(r)
+    //       // res.then(resp => {
+    //       //   console.log('Q')
+    //       //   console.log(resp.message)
+    //       // })
+    //       // FIRST TYPE
+    //       // if (r.status !== 200) {
+    //       //   res.then(r => {
+    //       //     // throw new Error(r.message)
+    //       //     reject(r.message)
+    //       //   })
+    //       // }
+    //       // SECOND TYPE
+
+    //       // try putting all status checks in one function
+    //       // to reject with common status check function
+    //       // then use a 2nd error handler function to logout and reRoute on the component level
+    //       // that checks for a logout flag on the error object...
+    //       let res = r.json()
+    //       if (r.status !== 200) {
+    //         resolvePromiseError(res, reject)
+    //       }
+    //       return res
+    //     })
+    //     .then(res => {
+    //       resolve(res)
+    //     })
+    //     .catch(e => {
+    //       reject(e)
+    //     })
+    // })
   }
   static updateStore (store) {
     const formData = convertToFormData(store)
 
     // const token = getTokenFromLocalStorage()
     return new Promise((resolve, reject) => {
-      fetch(`${env.BACKEND_URL}/update`, {
+      fetch(`${env.BACKEND_URL}/api/update`, {
         method: 'POST',
         // headers: {
         //   'Content-Type': 'application/json'

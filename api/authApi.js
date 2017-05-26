@@ -3,6 +3,8 @@ import env from '../config/envConfig'
 
 class authApi {
   static async signInUser (user) {
+    console.log('signin user api CALL')
+
     const url = `${env.BACKEND_URL}/api/signin`
     const response = await fetch(url, {
       method: 'POST',
@@ -15,6 +17,7 @@ class authApi {
     })
 
     const body = await response.json()
+    console.log('BODY of API CALL DONE')
 
     if (response.status !== 200) {
       console.log('error')
@@ -25,12 +28,12 @@ class authApi {
 
       throw error.message
     }
-    console.log(body)
+    // console.log(body)
 
     return body
   }
   static async signOutUser () {
-    const url = `${env.BACKEND_URL}/signout`
+    const url = `${env.BACKEND_URL}/api/signout`
     const response = await fetch(url, {
       method: 'GET',
       headers: {

@@ -9,11 +9,11 @@ import env from '../../config/envConfig'
 import { toastr } from 'react-redux-toastr'
 import Router from 'next/router'
 import { convertTagsToArray } from '../../utils/storeHelpers'
+import { handleError } from '../../utils/authUtils'
 
 class InitializeFromStateForm extends React.Component {
   constructor (props, context) {
     super(props, context)
-    console.log(props)
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.state = {
@@ -30,7 +30,6 @@ class InitializeFromStateForm extends React.Component {
       this.setState({ editing: true })
     } else {
       // reset form
-      console.log('reset')
       this.setState({ editing: false })
     }
   }
@@ -57,7 +56,7 @@ class InitializeFromStateForm extends React.Component {
     }
   }
 
-  handleFormSubmit (formProps) {
+  async handleFormSubmit (formProps) {
     // Convert Tags Object to array
     let storeWithTagsArray = convertTagsToArray(formProps)
     // check for image is preivew or not
@@ -82,15 +81,16 @@ class InitializeFromStateForm extends React.Component {
           toastr.error('Error:', e)
         })
     } else {
-      this.props
-        .addStore(storeWithTagsArray)
-        .then(r => {
-          toastr.success('Saved', 'Store Saved Successfully!')
-          Router.push(`/store/details?slug=${r.slug}`, `/store/${r.slug}`)
-        })
-        .catch(e => {
-          toastr.error('Error:', e)
-        })
+      try {
+        const response = await this.props.addStore(storeWithTagsArray)
+        toastr.success('Saved', 'Store Saved Successfully!')
+        Router.push(
+          `/store/details?slug=${response.slug}`,
+          `/store/${response.slug}`
+        )
+      } catch (e) {
+        handleError(e, this.props)
+      }
     }
   }
 
