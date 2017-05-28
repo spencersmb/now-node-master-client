@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import FormData from 'form-data'
+import { logUserOut } from '../actions/authActions'
 
 export const getStoreById = (stores, storeId) => {
   if (stores.length > 0) {
@@ -60,4 +61,20 @@ export const convertToFormData = store => {
   }
 
   return formData
+}
+
+export const handleStatusCheck = async (response, dispatch) => {
+  const error = {
+    message: 'There was an error'
+  }
+  if (response.status === 401) {
+    error.message = 'Please login again'
+    await dispatch(logUserOut())
+    throw error
+  }
+
+  if (response.status !== 200) {
+    error.message = response.statusText
+    throw error
+  }
 }

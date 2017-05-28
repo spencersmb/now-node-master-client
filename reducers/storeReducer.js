@@ -17,7 +17,11 @@ export const storeReducer = (state = initialState.stores, action) => {
         }
       })
       return newState
+    case 'addStoreGrider':
+      console.log('action from test reducer')
+      console.log(action)
 
+      return [...state, action.data]
     default:
       return state
   }

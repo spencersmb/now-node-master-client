@@ -2,7 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, reset } from 'redux-form'
 import renderDropzoneInput from '../inputs/fileInput'
-import { loadForm, addStore, updateStore } from '../../actions/storesActions'
+import {
+  loadForm,
+  addStore,
+  updateStore,
+  addStoreGriderAction
+} from '../../actions/storesActions'
 import checkBox from '../../components/inputs/checkbox'
 import renderField from '../../components/inputs/renderField'
 import env from '../../config/envConfig'
@@ -82,13 +87,22 @@ class InitializeFromStateForm extends React.Component {
         })
     } else {
       try {
-        const response = await this.props.addStore(storeWithTagsArray)
+        const response = await this.props.addStoreGriderAction(
+          storeWithTagsArray
+        )
+
+        console.log('response from storeForm')
+        console.log(response)
+
+        // const response = await this.props.addStore(storeWithTagsArray)
         toastr.success('Saved', 'Store Saved Successfully!')
         Router.push(
           `/store/details?slug=${response.slug}`,
           `/store/${response.slug}`
         )
       } catch (e) {
+        console.log('error from middleware in storeForm')
+        // TODO - THIS SHOULD ONLY HANDLE ERRORS - LOGOUT WILL NOW BE DONE IN MIDDLEWARE
         handleError(e, this.props)
       }
     }
@@ -175,9 +189,9 @@ const validate = values => {
     errors.photo = 'Invalid File Type'
   }
 
-  if (!values.name) {
-    errors.name = 'Required'
-  }
+  // if (!values.name) {
+  //   errors.name = 'Required'
+  // }
 
   return errors
 }
@@ -197,6 +211,7 @@ export default connect(
     load: loadForm,
     updateStore: updateStore,
     reset: reset,
-    addStore: addStore
+    addStore: addStore,
+    addStoreGriderAction: addStoreGriderAction
   } // bind account loading action creator
 )(storeForm)

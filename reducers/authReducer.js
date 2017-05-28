@@ -14,9 +14,10 @@ export const authReducer = (state = initialState.user, action) => {
         ...action.user,
         isAuthenticated: true
       })
-    case actionTypes.REFRESH_USER:
+    case actionTypes.REFRESH_TOKEN:
       return Object.assign({}, state, {
-        ...action.user
+        ...action.user,
+        isAuthenticated: true
       })
     case actionTypes.LOG_OUT:
       return {

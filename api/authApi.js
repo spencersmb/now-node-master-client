@@ -17,7 +17,7 @@ class authApi {
     })
 
     const body = await response.json()
-    console.log('BODY of API CALL DONE')
+    console.log('SIGN USER IN CALL DONE')
 
     if (response.status !== 200) {
       console.log('error')
@@ -90,6 +90,29 @@ class authApi {
     }
 
     return body
+  }
+  static async fetchRefreshTokens () {
+    // Must create FormData when posting an image
+    const url = `${env.BACKEND_URL}/api/refresh`
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include' // Don't forget to specify this if you need cookies
+    })
+
+    return response
+  }
+  static async fetchRefreshTokensServer (cookies) {
+    // Must create FormData when posting an image
+    const url = `${env.BACKEND_URL}/api/refresh`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        cookie: cookies
+      },
+      credentials: 'include' // here's the magical line that fixed everything
+    })
+
+    return response
   }
 }
 

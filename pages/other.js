@@ -12,7 +12,7 @@ class Counter extends React.Component {
   componentDidMount () {
     // const exp = moment(timestamp).add(60, 'm').unix() // 60 min
     // const exp = 1495697719 //Old one for testing
-    const exp = 1495787570
+    const exp = 1495824276
 
     const currentTime = moment().unix()
     const refreshWindow = 15 // min

@@ -13,6 +13,10 @@ const actionTypes = {
   // current actions
   LOAD_TODOS_SUCCESS: 'LOAD_TODOS_SUCCESS',
 
+  // TEST
+  addStoreGrider: 'addStoreGrider',
+  REFRESH_TOKEN: 'REFRESH_TOKEN',
+
   // STORE
   SAVE_STORE: 'SAVE_STORE',
   LOAD_SINGLE_STORE_SUCCESS: 'LOAD_SINGLE_STORE_SUCCESS',

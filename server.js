@@ -1,6 +1,9 @@
 const express = require('express')
 const httpProxy = require('http-proxy')
 const cookieParser = require('cookie-parser')
+const fetch = require('isomorphic-unfetch')
+const tokenUtils = require('./utils/serverUtilsTokens')
+const tokenCtrl = require('./serverMiddleware/tokenCtrl')
 // const compression = require('compression');
 const next = require('next')
 const { createServer } = require('http')
@@ -20,6 +23,18 @@ const prod = process.env.NODE_ENV === 'production'
 
 const expressServer = express()
 
+const fetchCookiesForheader = cookies => {
+  return cookies.split(';').filter(c => {
+    if (c.trim().startsWith('jwt=')) {
+      return c
+    }
+    if (c.trim().startsWith('_CSRF=')) {
+      return c
+    }
+  })
+  // .find(c => c.trim().startsWith('jwt='))
+}
+
 if (prod) {
   /*
 
@@ -27,6 +42,7 @@ if (prod) {
 
   */
   app.prepare().then(() => {
+    expressServer.use(cookieParser())
     // allows us to send json to our express app
     expressServer.use(bodyParser.json())
 
@@ -88,20 +104,69 @@ if (prod) {
 
   */
   const apiProxy = httpProxy.createProxyServer({ changeOrigin: true })
-  expressServer.use(cookieParser())
 
   app.prepare().then(() => {
     // expressServer.use('/api', (req, res) => {
     //   apiProxy.web(req, res, { target: 'http://localhost:7777' })
     // })
-
+    expressServer.use(cookieParser())
     expressServer.use('/api/**', (req, res) => {
       apiProxy.web(req, res, {
         target: 'http://localhost:7777/' + req.params[0]
       })
     })
+
     expressServer.use(bodyParser.json())
     // Other next-specific stuff
+    expressServer.get('/stores/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+      console.log('req from Refresh')
+      console.log(req.user)
+
+      // const jwt = req.cookies.jwt
+      // const decode = jwtDecode(jwt)
+      // res.clearCookie('_CSRF')
+      // console.log(req.headers.cookie)
+      // const jwt = tokenUtils.extractJWTFromCookie(req.cookies)
+
+      // //IF TOKEN IS EXPIRED?
+
+      // if (tokenUtils.checkTokenRefreshTime(jwt)) {
+      //   // refresh token
+      //   const newTokens = await tokenUtils.getNewTokens(req.headers.cookie)
+
+      //   newTokens.map(token => res.append('Set-Cookie', token))
+      //   // res.append('Set-Cookie', newCookies[0])
+      //   // res.append('Set-Cookie', newCookies[1])
+
+      //   //push user through to front end and make front end check for user and then push to redux
+      // }
+
+      // const cookiesPre = req.headers.cookie
+      // const response = await fetch('http://localhost:3000/api/api/refresh', {
+      //   method: 'GET',
+      //   headers: {
+      //     cookie: cookiesPre
+      //   },
+      //   credentials: 'include' // here's the magical line that fixed everything
+      // })
+      // console.log('fetch response')
+      // console.log(JSON.stringify(response, null, 2))
+
+      // const responseCookies = response.headers
+      // const newCookies = responseCookies._headers['set-cookie']
+      // console.log('responseCookies')
+      // console.log(responseCookies)
+      // console.log(responseCookies._headers['set-cookie'])
+
+      // const body = await response.json()
+      // console.log('body')
+      // console.log(body)
+
+      // res.append('Set-Cookie', newCookies[0])
+      // res.append('Set-Cookie', newCookies[1])
+
+      return app.render(req, res, '/stores', req.query)
+    })
 
     // NEXT ROUTE EXAMPLE BELOW
     // page path in app is: /pages/store

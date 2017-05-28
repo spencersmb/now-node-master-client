@@ -70,6 +70,15 @@ export const addStore = store => dispatch => {
     })
 }
 
+export const addStoreGriderAction = store => dispatch => {
+  const request = StoreApi.addStoreFetch(store)
+
+  return dispatch({
+    type: 'addStoreGrider',
+    payload: request
+  })
+}
+
 export const updateStore = store => dispatch => {
   return StoreApi.updateStore(store)
     .then(res => {

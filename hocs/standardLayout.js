@@ -5,63 +5,40 @@ import { connect } from 'react-redux'
 import Head from 'next/head'
 import env from '../config/envConfig'
 import ReduxToastr from 'react-redux-toastr'
-import { getUserFromCookie, validateUserToken } from '../utils/authUtils'
-// import { validateUserToken } from '../actions/authActions'
+import {
+  getUserFromJWT,
+  getTokenFromCookie,
+  getTokenFromCookieRes,
+  findTokenToDecode,
+  validateUserToken
+} from '../utils/authUtils'
 import { getStores } from '../actions/storesActions'
+import { saveUserToRedux } from '../actions/authActions'
+import authApi from '../api/authApi'
 
 export default (Page, title = '') => {
   class standardLayout extends React.Component {
     static async getInitialProps (ctx) {
-      console.log('isServer')
-      console.log(ctx.isServer)
-      console.log(process.browser)
-      // validate should be normal function to test if we are on the server and if the token is expired
-      // if both are true dispatch logout
-      // if on server but token is good, dispatch loginSucess
-      // if server is false but token is expired - dispatch logout
-      const loggedUser = process.browser
+      /**
+       * On first page load server-side - check for user passed in from custom express server => populate redux if user is found
+       * On client-side check validate user on each page load: expiry and refresh checks
+       */
+      process.browser
         ? validateUserToken(
             process.browser,
             ctx.store,
             ctx.store.getState().user
           )
-        : validateUserToken(
-            process.browser,
-            ctx.store,
-            getUserFromCookie(ctx.req)
+        : ctx.store.dispatch(
+            // if undefined - no token was updated - use the current user from the current token
+            saveUserToRedux(
+              getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
+            )
           )
-
-      // 1. Check user exp
-      // const loggedUser = process.browser
-      //   ? ctx.store.dispatch(validateUserToken(ctx.store.getState().user))
-      //   : ctx.store.dispatch(validateUserToken(getUserFromCookie(ctx.req)))
 
       const stores = process.browser
         ? ''
         : await ctx.store.dispatch(getStores())
-
-      // console.log('make cookie set')
-
-      // ctx.res.setHeader('Set-Cookie', `githubAccessToken=test; HttpOnly`)
-      // console.log(ctx.req.cookies)
-
-      // 2. log user out if no user, or set user in Redux
-      // 3. this is only used to fill redux state
-      // await ctx.store.dispatch(validateUserToken(loggedUser))
-
-      // 3. Get state after user has been added to redux
-      // const state = ctx.store.getState()
-      // console.log(state)
-
-      // if(!state.user._id && state.user.isAuthenticated){
-      //   console.log('needs refresh')
-      //   const cookieToken = getCookie(ctx.req)
-      //   loggedUser.token = cookieToken
-      //   ctx.store.dispatch(refreshUser(loggedUser))
-      // }
-
-      // IF NO USER AND STATE AUTHENTICATED - redo how auth function works on page load
-      // LOOK AT HOW STORES ARE LOADED IN EACH PAGE - getstores() function to look at
 
       // send props to the parent > child container
       const pageProps =
