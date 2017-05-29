@@ -10,7 +10,8 @@ import {
   getTokenFromCookie,
   getTokenFromCookieRes,
   findTokenToDecode,
-  validateUserToken
+  validateUserTokenServer,
+  validateUserTokenClient
 } from '../utils/authUtils'
 import { getStores } from '../actions/storesActions'
 import { saveUserToRedux } from '../actions/authActions'
@@ -24,16 +25,10 @@ export default (Page, title = '') => {
        * On client-side check validate user on each page load: expiry and refresh checks
        */
       process.browser
-        ? validateUserToken(
-            process.browser,
+        ? validateUserTokenClient(ctx.store, ctx.store.getState().user)
+        : validateUserTokenServer(
             ctx.store,
-            ctx.store.getState().user
-          )
-        : ctx.store.dispatch(
-            // if undefined - no token was updated - use the current user from the current token
-            saveUserToRedux(
-              getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
-            )
+            getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
           )
 
       const stores = process.browser

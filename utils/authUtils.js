@@ -98,7 +98,6 @@ export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   const cookies = getCookiesFromServerResponse(ctxHeaders)
   if (cookies) {
     console.log('has new user')
-
     return getTokenFromCookieRes(cookies)
   } else {
     console.log('no new user, use original token')
@@ -115,6 +114,9 @@ export const findTokenToDecode = (ctxHeaders, ctxReq) => {
  *
  */
 export const getUserFromJWT = token => {
+  if (!token) {
+    return undefined
+  }
   const tokenDecoded = jwtDecode(token)
   console.log('user from JWT')
   console.log(tokenDecoded)
@@ -225,8 +227,8 @@ export const handleError = async (e, store) => {
  * @returns {Dispatch Action: refreshToken}
  * @returns {Dispatch Action: saveUserToRedux}
  */
-export const validateUserToken = async (isBrowser, store, user) => {
-  console.log('validateUser', user)
+export const validateUserTokenClient = async (store, user) => {
+  console.log('validateUser-Client', user)
 
   if (!user) {
     return store.dispatch(logOut())
@@ -244,7 +246,7 @@ export const validateUserToken = async (isBrowser, store, user) => {
   }
 
   // if expired log user out
-  if (tokenNeedsRefresh(user) && !isBrowser) {
+  if (tokenNeedsRefresh(user)) {
     console.log('user needs new token')
     // Make api call and dispatch update
     // Middleware should auto detect the updated tokens param and dispatch action accordingly
@@ -254,16 +256,37 @@ export const validateUserToken = async (isBrowser, store, user) => {
       console.log('refresh Error')
       console.log(e)
     }
+  }
+}
+
+// find cookies(jwt)
+// find user from token and pass user in
+// - if there is no user(undefined) - dispatch logout
+// - if there is a new user
+// - return new user to save to redux
+// - return old user to save to redux
+export const validateUserTokenServer = async (store, user) => {
+  console.log('validateUser-Server', user)
+
+  if (!user) {
+    return store.dispatch(logOut())
+  }
+
+  // if expired log user out
+  if (isUserExpired(user)) {
+    console.log('user is expired')
+    try {
+      await store.dispatch(logUserOut())
+    } catch (e) {
+      console.log('log user out error')
+    }
     return
   }
 
   /*
-  If on the server - its a hard refresh so we need to populate redux
+  Save user from token
   */
-  if (isBrowser) {
-    console.log('on server load user into Redux')
-    return store.dispatch(saveUserToRedux(user))
-  }
+  store.dispatch(saveUserToRedux(user))
 }
 
 // export const fetchCookiesForheader = cookies => {

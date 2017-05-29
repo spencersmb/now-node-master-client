@@ -35,6 +35,7 @@ export default function ({ dispatch }) {
 
     if (body.token) {
       console.log('body has token in it')
+      console.log('save new user to redux')
 
       const decodedUser = getUserFromJWT(body.token)
 
