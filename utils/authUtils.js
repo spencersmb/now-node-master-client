@@ -10,6 +10,7 @@ import {
   saveUserToRedux
 } from '../actions/authActions'
 import actionTypes from '../actions/actionTypes'
+import envConfig from '../config/envConfig'
 
 // Currently not used
 export const setToken = token => {
@@ -96,11 +97,12 @@ export const getCookiesFromServerResponse = ctxHeaders => {
 
 export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   const cookies = getCookiesFromServerResponse(ctxHeaders)
+
   if (cookies) {
     console.log('has new user')
     return getTokenFromCookieRes(cookies)
   } else {
-    console.log('no new user, use original token')
+    console.log('no new user, use original token if there is one')
     return getTokenFromCookie(ctxReq)
   }
 }
@@ -186,7 +188,7 @@ export const tokenNeedsRefresh = user => {
   }
 
   const currentTime = moment().unix()
-  const refreshWindow = 15 // min
+  const refreshWindow = envConfig.REFRESH_WINDOW // min
   const duration = user.exp - currentTime
   const timeLeft = moment.duration(duration * 1000, 'milliseconds')
   const minLeft = moment.duration(timeLeft).minutes()

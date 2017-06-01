@@ -58,9 +58,9 @@ export const SaveUser = user => dispatch => {
 // Used on the auth/sign-off.js
 export const logUserOut = () => async dispatch => {
   try {
-    await authApi.signOutUser()
     unsetToken()
     dispatch(logOut())
+    await authApi.signOutUser()
     console.log('Async action signout complete')
     return
   } catch (e) {

@@ -1,10 +1,18 @@
 const jwtDecode = require('jwt-decode')
 const moment = require('moment')
 const fetch = require('isomorphic-unfetch')
+const config = require('../config/envConfigServer')
+// const envConfig = require('../../server')
 
 exports.extractJWTFromCookieParser = cookies => {
-  const jwt = cookies.jwt
-  return jwtDecode(jwt)
+  console.log('cookies - extractJWTFromCookieParser')
+  console.log(cookies)
+
+  if (!cookies.jwt) {
+    return undefined
+  }
+  // const jwt = cookies.jwt
+  return jwtDecode(cookies.jwt)
 }
 
 exports.extractUserFromJwt = jwt => {
@@ -21,9 +29,11 @@ exports.getJwtFromCookie = cookie => {
 }
 
 exports.checkTokenRefreshTime = token => {
-  if (!token.exp) {
+  if (!token) {
     return
   }
+  // console.log('config')
+  // console.log(config.REFRESH_WINDOW)
 
   const currentTime = moment().unix()
   const refreshWindow = 15 // min
@@ -34,24 +44,34 @@ exports.checkTokenRefreshTime = token => {
   console.log('min left until exp')
   console.log(minLeft)
 
-  if (minLeft <= refreshWindow && minLeft > 0) {
+  if (minLeft < refreshWindow && minLeft > 0) {
     return true
   }
 
   return false
 }
 
+exports.isExpired = token => {
+  const currentTime = moment().unix()
+  const expired = token.exp < currentTime
+  console.log('is expired? ', expired)
+
+  return token.exp < currentTime // because time goes up
+}
+
 exports.getNewTokens = async cookies => {
-  const response = await fetch('http://localhost:3000/api/api/refresh', {
+  const response = await fetch(`${config.envConfig.BACKEND_URL}/refresh`, {
     method: 'GET',
     headers: {
       cookie: cookies
     },
     credentials: 'include' // here's the magical line that fixed everything
   })
-  console.log('fetch response')
-  console.log(JSON.stringify(response, null, 2))
+  // check full response from the API request
+  // console.log('fetch response')
+  // console.log(JSON.stringify(response, null, 2))
 
+  // Split up header to return object hack
   const responseCookies = response.headers
   return responseCookies._headers['set-cookie']
 }

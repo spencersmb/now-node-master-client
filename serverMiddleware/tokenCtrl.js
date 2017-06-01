@@ -5,33 +5,43 @@ const tokenUtils = require('../utils/serverUtilsTokens')
 */
 
 exports.tokenRefreshCheck = async (req, res, next) => {
-  // req.body.photo = s3File.getUrlPath()
-  console.log('req cookies from token ctrl')
-  console.log(req.cookies)
+  // Check for cookies coming from browser
+  // console.log('req cookies from token ctrl')
 
   const jwt = tokenUtils.extractJWTFromCookieParser(req.cookies)
+  console.log('JWT')
+  console.log(jwt)
+
+  if (!jwt) {
+    console.log('no token found next.js server')
+    next()
+    return
+  }
 
   // IF TOKEN IS EXPIRED?
+  if (tokenUtils.isExpired(jwt)) {
+    console.log('token expired next js server')
 
+    res.clearCookie('jwt')
+    res.clearCookie('_CSRF')
+    next()
+    return
+  }
+
+  // does token need refresh
   if (!tokenUtils.checkTokenRefreshTime(jwt)) {
     next()
     return
   }
+
   // // refresh token
   const newTokens = await tokenUtils.getNewTokens(req.headers.cookie)
 
-  console.log('new tokens')
-  console.log(newTokens)
+  // Check for new tokens coming from API
+  // console.log('new tokens')
+  // console.log(newTokens)
 
   newTokens.map(token => res.append('Set-Cookie', token))
-  console.log('body')
-  console.log(req.body)
 
-  // res.append('Set-Cookie', newCookies[0])
-  // res.append('Set-Cookie', newCookies[1])
-
-  // push user through to front end and make front end check for user and then push to redux
-  const jwtToken = tokenUtils.getJwtFromCookie(newTokens[0])
-  req.user = tokenUtils.extractUserFromJwt(jwtToken)
   next()
 }

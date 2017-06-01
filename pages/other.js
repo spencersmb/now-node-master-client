@@ -1,50 +1,94 @@
 import React from 'react'
 import { initStore } from '../store'
 import withRedux from 'next-redux-wrapper'
+import { bindActionCreators } from 'redux'
+import { startClock } from '../actions/timeActions'
 import standardLayout from '../hocs/standardLayout'
 import moment from 'moment'
+import { getNewTokenTime } from '../utils/timeHelpers'
+import TokenClock from '../components/auth/tokenClock'
 
 class Counter extends React.Component {
-  static getInitialProps ({ store, isServer }) {
-    return { isServer }
+  static getInitialProps (ctx) {
+    const user = ctx.store.getState().user
+    const tokenTime = getNewTokenTime(user)
+    ctx.store.dispatch({ type: 'TICK', tokenTime })
+
+    return { user }
   }
 
   componentDidMount () {
-    // const exp = moment(timestamp).add(60, 'm').unix() // 60 min
-    // const exp = 1495697719 //Old one for testing
-    const exp = 1495824276
+    if (this.props.user.exp) {
+      this.timer = this.props.dispatch(startClock(this.props.user))
+    }
+  }
+  componentWillUnmount () {
+    clearInterval(this.timer)
+  }
 
-    const currentTime = moment().unix()
-    const refreshWindow = 15 // min
-    const expired = exp < currentTime // because time goes up
-    const duration = exp - currentTime
-    const timeLeft = moment.duration(duration * 1000, 'milliseconds')
-    const minLeft = moment.duration(timeLeft).minutes()
-
-    console.log(
-      'Current Time',
-      moment.unix(currentTime).format('YYYY-MM-DD HH:mm')
-    )
-    console.log('Expired Time', moment.unix(exp).format('YYYY-MM-DD HH:mm'))
-    console.log('has token expired', expired)
-    console.log('time left until token expires', minLeft)
-    console.log(
-      'is token within 15 min of expiring?',
-      minLeft <= refreshWindow && minLeft > 0
-    )
-
-    // console.log('exp minus currentTime', expMinusCurr)
-    // console.log('timeLeft', timeLeft)
-    // console.log('timeLeft', moment.unix(timeLeft).format('HH:mm'))
+  tick () {
+    setInterval(() => {
+      const currentTime = moment().unix()
+      const duration = this.state.exp - currentTime
+      const expired = this.state.exp < currentTime // because time goes up
+      const timeLeft = moment.duration(duration, 'seconds')
+      // const secLeft = timeLeft.seconds()
+      const minLeft = moment.duration(timeLeft).minutes()
+      const secCount = moment
+        .duration(timeLeft.asSeconds() - 1, 'seconds')
+        .seconds()
+      const readyForRefresh = minLeft < this.state.refreshWindow && secCount > 0
+      this.setState({
+        isExpired: expired,
+        minLeft: minLeft,
+        secLeft: secCount,
+        refresh: readyForRefresh
+      })
+    }, 1000)
   }
 
   render () {
     return (
-      <div>
-        MOMENT TIME
+      <div className='inner'>
+        <style jsx>{`
+        .show {
+          padding: 15px;
+          display: inline-block;
+          color: #82FA58;
+          font: 50px menlo, monaco, monospace;
+          background-color: #000;
+        }
+
+        .hide {
+          display:none;
+        }
+      `}</style>
+        <h2>Token Time</h2>
+        <div className={!this.props.time.exp ? 'show' : 'hide'}>
+          No Token Found
+        </div>
+        <div className={this.props.time.exp ? 'show' : 'hide'}>
+          <TokenClock {...this.props} />
+        </div>
+
       </div>
     )
   }
 }
 
-export default withRedux(initStore)(standardLayout(Counter, 'Other Page Title'))
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+    time: state.time
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    startClock: bindActionCreators(startClock, dispatch)
+  }
+}
+
+export default withRedux(initStore, mapStateToProps, mapDispatchToProps)(
+  standardLayout(Counter, 'Other Page Title')
+)

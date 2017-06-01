@@ -119,53 +119,11 @@ if (prod) {
     expressServer.use(bodyParser.json())
     // Other next-specific stuff
     expressServer.get('/stores/', tokenCtrl.tokenRefreshCheck, (req, res) => {
-      console.log('req from Refresh')
-      console.log(req.user)
-
-      // const jwt = req.cookies.jwt
-      // const decode = jwtDecode(jwt)
-      // res.clearCookie('_CSRF')
-      // console.log(req.headers.cookie)
-      // const jwt = tokenUtils.extractJWTFromCookie(req.cookies)
-
-      // //IF TOKEN IS EXPIRED?
-
-      // if (tokenUtils.checkTokenRefreshTime(jwt)) {
-      //   // refresh token
-      //   const newTokens = await tokenUtils.getNewTokens(req.headers.cookie)
-
-      //   newTokens.map(token => res.append('Set-Cookie', token))
-      //   // res.append('Set-Cookie', newCookies[0])
-      //   // res.append('Set-Cookie', newCookies[1])
-
-      //   //push user through to front end and make front end check for user and then push to redux
-      // }
-
-      // const cookiesPre = req.headers.cookie
-      // const response = await fetch('http://localhost:3000/api/api/refresh', {
-      //   method: 'GET',
-      //   headers: {
-      //     cookie: cookiesPre
-      //   },
-      //   credentials: 'include' // here's the magical line that fixed everything
-      // })
-      // console.log('fetch response')
-      // console.log(JSON.stringify(response, null, 2))
-
-      // const responseCookies = response.headers
-      // const newCookies = responseCookies._headers['set-cookie']
-      // console.log('responseCookies')
-      // console.log(responseCookies)
-      // console.log(responseCookies._headers['set-cookie'])
-
-      // const body = await response.json()
-      // console.log('body')
-      // console.log(body)
-
-      // res.append('Set-Cookie', newCookies[0])
-      // res.append('Set-Cookie', newCookies[1])
-
       return app.render(req, res, '/stores', req.query)
+    })
+
+    expressServer.get('/other/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+      return app.render(req, res, '/other', req.query)
     })
 
     // NEXT ROUTE EXAMPLE BELOW
