@@ -26,6 +26,8 @@ class StorePage extends React.Component {
       testing sending data down from getInitial props to populate page
       */
       post = await store.dispatch(getSingleStore(slug))
+      console.log('post')
+      console.log(post)
     } catch (e) {
       handleError(e, store)
     }

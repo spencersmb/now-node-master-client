@@ -10,11 +10,8 @@ const actionTypes = {
   GET_PROFILE: 'GET_PROFILE',
   REFRESH_USER: 'REFRESH_USER',
 
-  // current actions
-  LOAD_TODOS_SUCCESS: 'LOAD_TODOS_SUCCESS',
-
   // TEST
-  addStoreGrider: 'addStoreGrider',
+  ADD_STORE: 'ADD_STORE',
   REFRESH_TOKEN: 'REFRESH_TOKEN',
 
   // STORE

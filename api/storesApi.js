@@ -74,14 +74,8 @@ class StoreApi {
 
     // Resolve here to return the array below instead of store[]
     const body = await response.json()
-
-    // if (response.status !== 200) {
-    //   const error = {
-    //     message: 'Could not find store'
-    //   }
-
-    //   throw error.message
-    // }
+    console.log('body from getSingStore')
+    console.log(body)
 
     return body.store
   }
@@ -129,60 +123,11 @@ class StoreApi {
     console.log('datafrom ADD API CALL', response)
 
     return response.data
-
-    // return new Promise((resolve, reject) => {
-    //   // fetchIntercepter(`${env.BACKEND_URL}/api/add`, {
-    //   //   method: 'POST',
-    //   //   credentials: 'include', // Don't forget to specify this if you need cookies
-    //   //   body: formData
-    //   // }).then(e => {
-    //   //   console.log('2nd call')
-    //   // })
-    //   fetch(`${env.BACKEND_URL}/api/add`, {
-    //     method: 'POST',
-    //     headers: {
-    //       // Authorization: `Bearer ${token}`
-    //     },
-    //     // mode: 'cors',
-    //     credentials: 'include', // Don't forget to specify this if you need cookies
-    //     body: formData
-    //   })
-    //     .then(r => {
-    //       console.log('add error')
-    //       console.log(r)
-    //       // res.then(resp => {
-    //       //   console.log('Q')
-    //       //   console.log(resp.message)
-    //       // })
-    //       // FIRST TYPE
-    //       // if (r.status !== 200) {
-    //       //   res.then(r => {
-    //       //     // throw new Error(r.message)
-    //       //     reject(r.message)
-    //       //   })
-    //       // }
-    //       // SECOND TYPE
-
-    //       // try putting all status checks in one function
-    //       // to reject with common status check function
-    //       // then use a 2nd error handler function to logout and reRoute on the component level
-    //       // that checks for a logout flag on the error object...
-    //       let res = r.json()
-    //       if (r.status !== 200) {
-    //         resolvePromiseError(res, reject)
-    //       }
-    //       return res
-    //     })
-    //     .then(res => {
-    //       resolve(res)
-    //     })
-    //     .catch(e => {
-    //       reject(e)
-    //     })
-    // })
   }
+
+  /* Model for API calls */
   static async addStoreFetch (newStore) {
-    // Must create FormData when posting an image
+    // Create FormData when posting an image
     const formData = convertToFormData(newStore)
 
     const url = `${env.BACKEND_URL}/api/add`
@@ -192,58 +137,8 @@ class StoreApi {
       body: formData
     })
 
+    // Send PROMISE TO ACTION TO SEND THROUGH REDUCER
     return response
-
-    // return new Promise((resolve, reject) => {
-    //   // fetchIntercepter(`${env.BACKEND_URL}/api/add`, {
-    //   //   method: 'POST',
-    //   //   credentials: 'include', // Don't forget to specify this if you need cookies
-    //   //   body: formData
-    //   // }).then(e => {
-    //   //   console.log('2nd call')
-    //   // })
-    //   fetch(`${env.BACKEND_URL}/api/add`, {
-    //     method: 'POST',
-    //     headers: {
-    //       // Authorization: `Bearer ${token}`
-    //     },
-    //     // mode: 'cors',
-    //     credentials: 'include', // Don't forget to specify this if you need cookies
-    //     body: formData
-    //   })
-    //     .then(r => {
-    //       console.log('add error')
-    //       console.log(r)
-    //       // res.then(resp => {
-    //       //   console.log('Q')
-    //       //   console.log(resp.message)
-    //       // })
-    //       // FIRST TYPE
-    //       // if (r.status !== 200) {
-    //       //   res.then(r => {
-    //       //     // throw new Error(r.message)
-    //       //     reject(r.message)
-    //       //   })
-    //       // }
-    //       // SECOND TYPE
-
-    //       // try putting all status checks in one function
-    //       // to reject with common status check function
-    //       // then use a 2nd error handler function to logout and reRoute on the component level
-    //       // that checks for a logout flag on the error object...
-    //       let res = r.json()
-    //       if (r.status !== 200) {
-    //         resolvePromiseError(res, reject)
-    //       }
-    //       return res
-    //     })
-    //     .then(res => {
-    //       resolve(res)
-    //     })
-    //     .catch(e => {
-    //       reject(e)
-    //     })
-    // })
   }
   static updateStore (store) {
     const formData = convertToFormData(store)

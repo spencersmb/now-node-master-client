@@ -27,6 +27,11 @@ export const getSingleStore = slug => async (dispatch, getState) => {
       throw e
     }
   }
+  console.log('slug')
+  console.log(slug)
+  console.log('state from getSinglestore')
+  console.log(state.stores)
+  console.log(state.stores.filter(store => store.slug === slug))
 
   // return first item from the array that is filtered
   return state.stores.filter(store => store.slug === slug)[0]
@@ -70,12 +75,13 @@ export const addStore = store => dispatch => {
     })
 }
 
+/* Model for Async Actions to go through middleware */
 export const addStoreGriderAction = store => dispatch => {
   const request = StoreApi.addStoreFetch(store)
 
   return dispatch({
-    type: 'addStoreGrider',
-    payload: request
+    type: actionTypes.ADD_STORE,
+    payload: request // request = Promise, must send data on key 'payload`
   })
 }
 
@@ -104,11 +110,11 @@ export const loadTagListSuccess = data => {
   }
 }
 
-export const saveStore = store => {
-  return {
+export const saveStore = store => dispatch => {
+  return dispatch({
     type: actionTypes.SAVE_STORE,
     store
-  }
+  })
 }
 
 export const updateStoreSuccess = store => {

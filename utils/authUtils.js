@@ -1,6 +1,4 @@
 import jwtDecode from 'jwt-decode'
-import Cookie from 'js-cookie'
-import cookies from 'browser-cookies'
 import moment from 'moment'
 import { toastr } from 'react-redux-toastr'
 import {
@@ -9,8 +7,8 @@ import {
   logOut,
   saveUserToRedux
 } from '../actions/authActions'
-import actionTypes from '../actions/actionTypes'
 import envConfig from '../config/envConfig'
+import Router from 'next/router'
 
 // Currently not used
 export const setToken = token => {
@@ -120,10 +118,8 @@ export const getUserFromJWT = token => {
     return undefined
   }
   const tokenDecoded = jwtDecode(token)
-  console.log('user from JWT')
-  console.log(tokenDecoded)
-
   const allowedKeys = ['name', 'email', 'exp']
+
   return Object.keys(tokenDecoded)
     .filter(key => allowedKeys.includes(key))
     .reduce((obj, key) => {
@@ -204,18 +200,20 @@ export const tokenNeedsRefresh = user => {
 }
 
 // Not sure if this is used
-export const handleError = async (e, store) => {
+export const handleMiddlewareError = async (e, dispatch) => {
   console.log('handleError from AuthUtils')
   console.log(e)
+  const error = {
+    message: e.message
+  }
 
   if (e.logout) {
     toastr.error('Error:', e.message)
-    store.dispatch(logUserOut())
-    // Router.push(`/auth/login`, `/login`)
+    dispatch(logUserOut())
+    Router.push(`/auth/login`, `/login`)
   }
 
   toastr.error('Error:', e.message)
-  // throw e.message
 }
 
 /**

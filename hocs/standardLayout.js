@@ -7,22 +7,19 @@ import env from '../config/envConfig'
 import ReduxToastr from 'react-redux-toastr'
 import {
   getUserFromJWT,
-  getTokenFromCookie,
-  getTokenFromCookieRes,
   findTokenToDecode,
   validateUserTokenServer,
   validateUserTokenClient
 } from '../utils/authUtils'
 import { getStores } from '../actions/storesActions'
-import { saveUserToRedux } from '../actions/authActions'
-import authApi from '../api/authApi'
 
 export default (Page, title = '') => {
   class standardLayout extends React.Component {
     static async getInitialProps (ctx) {
       /**
-       * On first page load server-side - check for user passed in from custom express server => populate redux if user is found
-       * On client-side check validate user on each page load: expiry and refresh checks
+       * Server-side - check for user passed in from custom express server => populate redux if user is found
+       *
+       * On client-side check && validate user on each page load: expiry and refresh checks with Refresh Window Time
        */
       process.browser
         ? validateUserTokenClient(ctx.store, ctx.store.getState().user)
@@ -31,9 +28,8 @@ export default (Page, title = '') => {
             getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
           )
 
-      const stores = process.browser
-        ? ''
-        : await ctx.store.dispatch(getStores())
+      // Get stores on Server-side render for first page load
+      process.browser ? '' : await ctx.store.dispatch(getStores())
 
       // send props to the parent > child container
       const pageProps =
@@ -58,10 +54,6 @@ export default (Page, title = '') => {
 
     componentDidMount () {
       window.addEventListener('storage', this.logout, false)
-
-      if (!this.props.user.isAuthenticated) {
-        // this.props.logOut()
-      }
     }
 
     componentWillUnmount () {
@@ -77,7 +69,7 @@ export default (Page, title = '') => {
           <Header {...this.props} />
           <Page {...this.props} />
           <ReduxToastr
-            timeOut={8000}
+            timeOut={6000}
             newestOnTop={false}
             preventDuplicates
             position='bottom-right'

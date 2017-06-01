@@ -2,12 +2,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, reset } from 'redux-form'
 import renderDropzoneInput from '../inputs/fileInput'
-import {
-  loadForm,
-  addStore,
-  updateStore,
-  addStoreGriderAction
-} from '../../actions/storesActions'
+// import {
+//   loadForm,
+//   addStore,
+//   updateStore,
+//   addStoreGriderAction
+// } from '../../actions/storesActions'
+import * as actions from '../../actions/storesActions'
 import checkBox from '../../components/inputs/checkbox'
 import renderField from '../../components/inputs/renderField'
 import env from '../../config/envConfig'
@@ -39,7 +40,7 @@ class InitializeFromStateForm extends React.Component {
     }
   }
 
-  //update data as soon as it mounts
+  // update data as soon as it mounts
   componentDidMount () {
     if (this.state.editing) {
       // modify store props to work with Redux form
@@ -87,23 +88,19 @@ class InitializeFromStateForm extends React.Component {
         })
     } else {
       try {
-        const response = await this.props.addStoreGriderAction(
-          storeWithTagsArray
-        )
+        const response = await this.props.addStoreAction(storeWithTagsArray)
 
-        console.log('response from storeForm')
-        console.log(response)
+        this.props.saveStore(response)
 
         // const response = await this.props.addStore(storeWithTagsArray)
         toastr.success('Saved', 'Store Saved Successfully!')
+
         Router.push(
           `/store/details?slug=${response.slug}`,
           `/store/${response.slug}`
         )
       } catch (e) {
-        console.log('error from middleware in storeForm')
-        // TODO - THIS SHOULD ONLY HANDLE ERRORS - LOGOUT WILL NOW BE DONE IN MIDDLEWARE
-        handleError(e, this.props)
+        // console.log('error from middleware in storeForm')
       }
     }
   }
@@ -208,10 +205,11 @@ export default connect(
     initialValues: state.editingStore.data // pull initial values from account reducer
   }),
   {
-    load: loadForm,
-    updateStore: updateStore,
+    load: actions.loadForm,
+    updateStore: actions.updateStore,
     reset: reset,
-    addStore: addStore,
-    addStoreGriderAction: addStoreGriderAction
+    // addStore: actions.addStore,
+    saveStore: actions.saveStore,
+    addStoreAction: actions.addStoreGriderAction
   } // bind account loading action creator
 )(storeForm)

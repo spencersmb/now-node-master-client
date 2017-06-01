@@ -64,6 +64,8 @@ export const convertToFormData = store => {
 }
 
 export const handleStatusCheck = async (response, dispatch) => {
+  console.log('handle Status Check')
+
   const error = {
     message: 'There was an error'
   }
