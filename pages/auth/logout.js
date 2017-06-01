@@ -14,12 +14,14 @@ export class LogOutPage extends Component {
   static async getInitialProps ({ store }) {
     // Get storeID
     // await store.dispatch(getStores())
+    console.log('log user out page getInitialProps')
+
     await store.dispatch(logUserOut())
 
     return {}
   }
   componentWillMount () {
-    this.props.logout()
+    // this.props.logout()
   }
   render () {
     return (

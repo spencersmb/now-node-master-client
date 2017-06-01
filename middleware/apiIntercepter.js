@@ -25,10 +25,17 @@ export default function ({ dispatch }) {
       // console.log(response.statusText)
       // console.log(response.headers)
 
-      // ADD GLOBAL RESPONSE FUNCTION HERE WITH DISPATHC LOGOUT with try catch
       await handleStatusCheck(response, dispatch)
 
       const body = await response.json()
+
+      console.log('body from middleware')
+      console.log(body)
+
+      // Check for logout so you dont refresh tokens after logout
+      // if(action.type === 'LOG_OUT'){
+
+      // }
 
       if (body.token) {
         // console.log('body has token in it')

@@ -20,7 +20,7 @@ exports.tokenRefreshCheck = async (req, res, next) => {
 
   // IF TOKEN IS EXPIRED?
   if (tokenUtils.isExpired(jwt)) {
-    console.log('token expired next js server')
+    console.log('token expired on next js server')
 
     res.clearCookie('jwt')
     res.clearCookie('_CSRF')

@@ -37,8 +37,10 @@ export const authenticateUser = user => async dispatch => {
    */
   try {
     const response = await authApi.registerUser(user)
-    setToken(response.token)
-    return dispatch(saveUserToRedux(getUserFromLocalStorage()))
+    const decodedUser = getUserFromJWT(response.token)
+    return dispatch(saveUserToRedux(decodedUser))
+    // setToken(response.token)
+    // return dispatch(saveUserToRedux(getUserFromLocalStorage()))
   } catch (e) {
     throw e
   }

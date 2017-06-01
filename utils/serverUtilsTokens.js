@@ -35,6 +35,7 @@ exports.checkTokenRefreshTime = token => {
   // console.log('config')
   // console.log(config.REFRESH_WINDOW)
 
+  // IS THIS SETUP ELSEWHERE?
   const currentTime = moment().unix()
   const refreshWindow = 15 // min
   const duration = token.exp - currentTime
@@ -45,6 +46,9 @@ exports.checkTokenRefreshTime = token => {
   console.log(minLeft)
 
   if (minLeft < refreshWindow && minLeft > 0) {
+    console.log('does token need refresh?')
+    console.log('true')
+
     return true
   }
 
@@ -60,7 +64,7 @@ exports.isExpired = token => {
 }
 
 exports.getNewTokens = async cookies => {
-  const response = await fetch(`${config.envConfig.BACKEND_URL}/refresh`, {
+  const response = await fetch(`${config.envConfig.BACKEND_URL}/api/refresh`, {
     method: 'GET',
     headers: {
       cookie: cookies

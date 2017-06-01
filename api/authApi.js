@@ -57,12 +57,13 @@ class authApi {
     return body
   }
   static async registerUser (user) {
-    const url = `${env.BACKEND_URL}/register`
+    const url = `${env.BACKEND_URL}/api/register`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include', // Don't forget to specify this if you need cookies
       body: JSON.stringify(user)
     })
 
