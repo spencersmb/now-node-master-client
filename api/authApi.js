@@ -33,6 +33,8 @@ class authApi {
     return body
   }
   static async signOutUser () {
+    console.log('Sign user out')
+
     const url = `${env.BACKEND_URL}/api/signout`
     const response = await fetch(url, {
       method: 'GET',

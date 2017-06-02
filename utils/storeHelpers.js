@@ -80,3 +80,5 @@ export const handleStatusCheck = async (response, dispatch) => {
     throw error
   }
 }
+
+export const renderSvg = Svg => <Svg />

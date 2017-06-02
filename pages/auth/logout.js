@@ -14,7 +14,7 @@ export class LogOutPage extends Component {
   static async getInitialProps ({ store }) {
     // Get storeID
     // await store.dispatch(getStores())
-    console.log('log user out page getInitialProps')
+    console.log('Dispatch logout')
 
     await store.dispatch(logUserOut())
 

@@ -37,7 +37,7 @@ exports.checkTokenRefreshTime = token => {
 
   // IS THIS SETUP ELSEWHERE?
   const currentTime = moment().unix()
-  const refreshWindow = 15 // min
+  const refreshWindow = config.envConfig.REFRESH_WINDOW // min
   const duration = token.exp - currentTime
   const timeLeft = moment.duration(duration * 1000, 'milliseconds')
   const minLeft = moment.duration(timeLeft).minutes()
@@ -45,7 +45,7 @@ exports.checkTokenRefreshTime = token => {
   console.log('min left until exp')
   console.log(minLeft)
 
-  if (minLeft < refreshWindow && minLeft > 0) {
+  if (minLeft < refreshWindow && minLeft >= 0) {
     console.log('does token need refresh?')
     console.log('true')
 

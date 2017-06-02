@@ -46,6 +46,14 @@ if (prod) {
     // allows us to send json to our express app
     expressServer.use(bodyParser.json())
 
+    expressServer.get('/stores/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+      return app.render(req, res, '/stores', req.query)
+    })
+
+    expressServer.get('/other/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+      return app.render(req, res, '/other', req.query)
+    })
+
     // NEXT ROUTE EXAMPLE BELOW
     // page path in app is: /pages/store
     // filename is: edit.js

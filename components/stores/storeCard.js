@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-import { renderSvg, svgs } from '../../config/svgs'
+import { svgs } from '../../config/svgs'
+import { renderSvg } from '../../utils/storeHelpers'
 
 export default props => {
   const { name, photo, slug, description, _id } = props

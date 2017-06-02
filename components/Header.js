@@ -2,9 +2,10 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 import Search from './nav/search'
 import Login from './nav/login'
-import env from '../config/envConfig'
-import { renderSvg } from '../config/svgs'
-
+// import env from '../config/envConfig'
+import { nav } from '../components/nav/links'
+import { renderSvg } from '../utils/storeHelpers'
+// const env = require('../config/envConfigServer')
 // import styled from 'styled-components'
 
 // File links array based on if user is authenticated
@@ -14,7 +15,7 @@ import { renderSvg } from '../config/svgs'
 
 // File links array based on if user is authenticated
 const getLinks = isAuthenticated => {
-  return env.LINKS
+  return nav.LINKS
     .filter(
       link => !link.authRequired || (link.authRequired && isAuthenticated)
     )
@@ -40,7 +41,7 @@ export default connect(state => state)(({ url, user }) => {
           <li className='nav__item'>
             <Link prefetch href='/'>
               <a className='nav__link nav__link--logo'>
-                {renderSvg(env.LOGO)}
+                {renderSvg(nav.LOGO)}
               </a>
             </Link>
           </li>

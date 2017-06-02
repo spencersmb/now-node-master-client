@@ -36,8 +36,10 @@ export default function ({ dispatch }) {
       // if(action.type === 'LOG_OUT'){
 
       // }
+      console.log('action type')
+      console.log(action.type)
 
-      if (body.token) {
+      if (body.token && action.type !== 'LOG_OUT') {
         // console.log('body has token in it')
         // console.log('save new user to redux')
 

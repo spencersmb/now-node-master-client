@@ -8,7 +8,7 @@ import MapSvg from '../static/images/icons/map.svg'
 import Pencil from '../static/images/icons/pencil.svg'
 import Logout from '../static/images/icons/logout.svg'
 
-export const svgs = {
+exports.svgs = {
   Logo,
   Store,
   Tag,
@@ -18,5 +18,3 @@ export const svgs = {
   Pencil,
   Logout
 }
-
-export const renderSvg = Svg => <Svg />
