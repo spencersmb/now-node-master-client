@@ -22,8 +22,8 @@ export default (Page, title = '') => {
        * On client-side check && validate user on each page load: expiry and refresh checks with Refresh Window Time
        */
       process.browser
-        ? validateUserTokenClient(ctx.store, ctx.store.getState().user)
-        : validateUserTokenServer(
+        ? await validateUserTokenClient(ctx.store, ctx.store.getState().user)
+        : await validateUserTokenServer(
             ctx.store,
             getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
           )

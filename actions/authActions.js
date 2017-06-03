@@ -11,17 +11,19 @@ import {
 // import { logout } from '../utils/lock'
 
 export const signinUser = user => async dispatch => {
-  try {
-    const response = await authApi.signInUser(user)
-    const decodedUser = getUserFromJWT(response.token)
-    return dispatch(saveUserToRedux(decodedUser))
-  } catch (e) {
-    console.log('signIn action')
-    console.log(e)
+  const request = authApi.signInUser(user)
 
-    throw e
-  }
+  return dispatch({
+    type: actionTypes.LOG_USER_IN,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
 }
+
+export const saveUserToRedux = user => dispatch =>
+  dispatch({
+    type: actionTypes.LOGIN_SUCCESS,
+    user
+  })
 
 // THIS NEEDS TO BE UPDATED
 // Used on the auth/signed-in.js & AUTH0 Class
@@ -42,11 +44,6 @@ export const authenticateUser = user => async dispatch => {
   }
 }
 
-export const saveUserToRedux = user => ({
-  type: actionTypes.LOGIN_SUCCESS,
-  user
-})
-
 // Not currently Used
 // Used on the auth/signed-in.js & AUTH0 Class
 export const SaveUser = user => dispatch => {
@@ -58,9 +55,9 @@ export const logUserOut = () => async dispatch => {
   try {
     console.log('Call logout TRY')
 
+    await authApi.signOutUser()
     dispatch(logOut())
     unsetToken()
-    await authApi.signOutUser()
     console.log('Async action signout complete')
     return
   } catch (e) {

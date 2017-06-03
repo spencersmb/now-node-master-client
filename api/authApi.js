@@ -6,7 +6,7 @@ class authApi {
     console.log('signin user api CALL')
 
     const url = `${env.BACKEND_URL}/api/signin`
-    const response = await fetch(url, {
+    return fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -15,25 +15,39 @@ class authApi {
       credentials: 'include', // Don't forget to specify this if you need cookies
       body: JSON.stringify(user)
     })
-    const body = await response.json()
-    console.log('SIGN USER IN CALL DONE')
-    console.log(body)
-
-    if (response.status !== 200) {
-      console.log('error in signin')
-
-      const error = {
-        message: 'wrong username/password'
-      }
-      console.log('error')
-      console.log(error)
-
-      throw error.message
-    }
-    // console.log(body)
-
-    return body
   }
+  // static async signInUser (user) {
+  //   console.log('signin user api CALL')
+
+  //   const url = `${env.BACKEND_URL}/api/signin`
+  //   const response = await fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     // mode: 'cors',
+  //     credentials: 'include', // Don't forget to specify this if you need cookies
+  //     body: JSON.stringify(user)
+  //   })
+  //   const body = await response.json()
+  //   console.log('SIGN USER IN CALL DONE')
+  //   console.log(body)
+
+  //   if (response.status !== 200) {
+  //     console.log('error in signin')
+
+  //     const error = {
+  //       message: 'wrong username/password'
+  //     }
+  //     console.log('error')
+  //     console.log(error)
+
+  //     throw error.message
+  //   }
+  //   // console.log(body)
+
+  //   return body
+  // }
   static async signOutUser () {
     console.log('Sign user out')
 

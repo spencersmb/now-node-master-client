@@ -92,7 +92,6 @@ class InitializeFromStateForm extends React.Component {
 
         this.props.saveStore(response)
 
-        // const response = await this.props.addStore(storeWithTagsArray)
         toastr.success('Saved', 'Store Saved Successfully!')
 
         Router.push(

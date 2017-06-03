@@ -24,7 +24,9 @@ export const handleMiddlewareError = async (e, dispatch) => {
     Router.push(`/auth/login`, `/login`)
   }
 
-  toastr.error('Error:', e.message)
+  if (e.showMid) {
+    toastr.error('Error:', e.message)
+  }
 }
 
 /**
@@ -37,13 +39,21 @@ export const handleMiddlewareError = async (e, dispatch) => {
  * @returns Action dispatch( logUserOut )
  * @returns {Error}
  */
-export const handleStatusCheck = async (response, dispatch) => {
+export const handleStatusCheck = async (response, dispatch, actionType) => {
   console.log('handle Status Check')
 
   const error = {
+    showMid: false,
     message: 'There was an error'
   }
+
+  if (response.status === 401 && actionType === 'LOG_USER_IN') {
+    error.message = 'Incorrect Username or password'
+    throw error
+  }
+
   if (response.status === 401) {
+    error.showMid = true
     error.message = 'Please login again'
     await dispatch(logUserOut())
     throw error

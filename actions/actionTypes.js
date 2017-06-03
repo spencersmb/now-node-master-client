@@ -15,6 +15,7 @@ const actionTypes = {
 
   // AUTH
   LOG_OUT: 'LOG_OUT',
+  LOG_USER_IN: 'LOG_USER_IN',
 
   // STORE
   SAVE_STORE: 'SAVE_STORE',

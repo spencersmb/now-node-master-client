@@ -63,13 +63,10 @@ class isSignedIn extends React.Component {
     this.handleLogOut = this.handleLogOut.bind(this)
   }
   async handleLogOut () {
-    console.log('logout')
     try {
       const response = await this.props.logOut()
-      // const response = await this.props.addStore(storeWithTagsArray)
-      toastr.success('Logout', 'Successfully Logged Out')
       Router.push(`/auth/logout`, `/logout`)
-      // console.log('error from middleware in storeForm')
+      toastr.success('Logout', 'Successfully Logged Out')
     } catch (e) {}
   }
   render () {

@@ -28,23 +28,29 @@ export default function ({ dispatch }) {
       // console.log(response.statusText)
       // console.log(response.headers)
 
-      await handleStatusCheck(response, dispatch)
+      await handleStatusCheck(response, dispatch, action.type)
 
       const body = await response.json()
 
-      console.log('body from middleware')
-      console.log(body)
+      // console.log('body from middleware')
+      // console.log(body)
+      // console.log('action type')
+      // console.log(action.type)
 
-      // Check for logout so you dont refresh tokens after logout
-      // if(action.type === 'LOG_OUT'){
+      if (body.token && action.type === 'LOG_USER_IN') {
+        const newAction = {
+          type: action.type,
+          data: body.token
+        }
 
-      // }
-      console.log('action type')
-      console.log(action.type)
+        // Send through all the middlewares again
+        dispatch(newAction)
+        return body.token
+      }
 
       if (body.token && action.type !== 'LOG_OUT') {
-        // console.log('body has token in it')
-        // console.log('save new user to redux')
+        console.log('body has token in it')
+        console.log('save new user to redux')
 
         const decodedUser = getUserFromJWT(body.token)
 
@@ -59,8 +65,8 @@ export default function ({ dispatch }) {
         data: body.data
       }
 
-      console.log('new action')
-      console.log(newAction)
+      // console.log('new action')
+      // console.log(newAction)
 
       // Send through all the middlewares again
       dispatch(newAction)

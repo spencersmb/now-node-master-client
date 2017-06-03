@@ -22,6 +22,7 @@ class Counter extends React.Component {
       this.timer = this.props.dispatch(startClock(this.props.user))
     }
   }
+
   componentWillUnmount () {
     clearInterval(this.timer)
   }
