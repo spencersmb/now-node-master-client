@@ -1,5 +1,8 @@
-import { handleStatusCheck } from '../utils/storeHelpers'
-import { getUserFromJWT, handleMiddlewareError } from '../utils/authUtils'
+import { getUserFromJWT } from '../utils/authUtils'
+import {
+  handleMiddlewareError,
+  handleStatusCheck
+} from '../utils/errorHandlers'
 import actionTypes from '../actions/actionTypes'
 
 export default function ({ dispatch }) {

@@ -2,13 +2,27 @@ import _ from 'lodash'
 import FormData from 'form-data'
 import { logUserOut } from '../actions/authActions'
 
+/**
+ * getStoreById(array, ID)
+ *
+ * @param [Array] stores
+ * @param number ID
+ * @returns [Array]
+ */
 export const getStoreById = (stores, storeId) => {
   if (stores.length > 0) {
     return stores.filter(store => store._id === storeId)
   }
 }
 
-// Convert tags to Object for redux form
+/**
+ * convertTagsToObject(arg)
+ * - Convert array from MongoDb to Object Key/value pair for Redux-Form Initialization
+ *
+ * @param {Object} store
+ * @returns {Object} empty
+ * @returns {Object} tags key/value pair {"TagName": true, "TagName": true}
+ */
 export const convertTagsToObject = store => {
   if (store === undefined) {
     return {}
@@ -28,17 +42,35 @@ export const convertTagsToObject = store => {
   })
 }
 
+/**
+ * convertTagsToArray(arg)
+ * - Convert Object coming from Redux-Form and convert object to array and store on key "tags" to send to Mongo
+ *
+ * @param {Object} store
+ * @returns {Object} store(original)
+ * @returns {Object} Object with new array stored on key "tags"
+ */
 export const convertTagsToArray = store => {
+  // Check if store already has tags array
   if (!store.hasOwnProperty('tags')) {
     return store
   }
 
   const tags = Object.keys(store.tags)
 
-  // Convert tags to array
+  // Convert tags to array and store inside tags object
   return Object.assign({}, store, { tags: tags })
 }
 
+/**
+ * convertToFormData(arg)
+ * - Get store object before sending to API and create a new FormData Object to send to server
+ * - Used to upload files/photos
+ *
+ * @param {Object} store
+ * @returns {Object} store(original)
+ * @returns {Object} Object with new array stored on key "tags"
+ */
 export const convertToFormData = store => {
   const formData = new FormData()
 
@@ -61,24 +93,6 @@ export const convertToFormData = store => {
   }
 
   return formData
-}
-
-export const handleStatusCheck = async (response, dispatch) => {
-  console.log('handle Status Check')
-
-  const error = {
-    message: 'There was an error'
-  }
-  if (response.status === 401) {
-    error.message = 'Please login again'
-    await dispatch(logUserOut())
-    throw error
-  }
-
-  if (response.status !== 200) {
-    error.message = response.statusText
-    throw error
-  }
 }
 
 export const renderSvg = Svg => <Svg />

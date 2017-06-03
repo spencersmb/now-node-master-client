@@ -11,18 +11,14 @@ import {
 // import { logout } from '../utils/lock'
 
 export const signinUser = user => async dispatch => {
-  console.log('signin user action first called')
-
   try {
     const response = await authApi.signInUser(user)
-    console.log('signin User action')
-    // console.log(response)
     const decodedUser = getUserFromJWT(response.token)
-    // console.log('Decoded User', decodedUser)
-
-    // setToken(response.token)
     return dispatch(saveUserToRedux(decodedUser))
   } catch (e) {
+    console.log('signIn action')
+    console.log(e)
+
     throw e
   }
 }

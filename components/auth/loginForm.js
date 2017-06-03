@@ -13,13 +13,14 @@ class LoginFormComponent extends React.Component {
   }
 
   async handleFormSubmit ({ email, password }) {
-    // console.log('HandleForm submit')
-    // sent from redux-form
     try {
       const response = await this.props.signinUser({ email, password })
       toastr.success('Success:', 'User: ' + response.user.name + ' Logged In!')
       Router.push(`/stores`)
     } catch (e) {
+      console.log('e')
+      console.log(e)
+
       toastr.error('Error:', e)
     }
   }

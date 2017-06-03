@@ -27,6 +27,7 @@ export default (Page, title = '') => {
             ctx.store,
             getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
           )
+
       // Get stores on Server-side render for first page load
       process.browser ? '' : await ctx.store.dispatch(getStores())
 

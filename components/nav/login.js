@@ -66,7 +66,6 @@ class isSignedIn extends React.Component {
     console.log('logout')
     try {
       const response = await this.props.logOut()
-
       // const response = await this.props.addStore(storeWithTagsArray)
       toastr.success('Logout', 'Successfully Logged Out')
       Router.push(`/auth/logout`, `/logout`)

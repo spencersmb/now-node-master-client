@@ -15,16 +15,18 @@ class authApi {
       credentials: 'include', // Don't forget to specify this if you need cookies
       body: JSON.stringify(user)
     })
-
     const body = await response.json()
     console.log('SIGN USER IN CALL DONE')
+    console.log(body)
 
     if (response.status !== 200) {
-      console.log('error')
+      console.log('error in signin')
 
       const error = {
-        message: body.message
+        message: 'wrong username/password'
       }
+      console.log('error')
+      console.log(error)
 
       throw error.message
     }

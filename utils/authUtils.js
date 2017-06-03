@@ -1,6 +1,5 @@
 import jwtDecode from 'jwt-decode'
 import moment from 'moment'
-import { toastr } from 'react-redux-toastr'
 import {
   logUserOut,
   refreshTokenAction,
@@ -8,21 +7,6 @@ import {
   saveUserToRedux
 } from '../actions/authActions'
 import envConfig from '../config/envConfig'
-import Router from 'next/router'
-
-// Currently not used
-export const setToken = token => {
-  if (!process.browser) {
-    return
-  }
-  window.localStorage.setItem('token', token)
-  window.localStorage.setItem('user', JSON.stringify(jwtDecode(token)))
-  // Cookie.set('jwt', token)
-  // cookies.set('jwt', token, {
-  //   expires: 365,
-  //   path: 'http://localhost:3000/'
-  // })
-}
 
 /**
  * unsetToken()
@@ -38,27 +22,6 @@ export const unsetToken = () => {
   // Cookie.remove('jwt')
 
   window.localStorage.setItem('logout', Date.now())
-}
-
-// Currently unused
-export const getUserFromLocalStorage = () => {
-  const json = window.localStorage.user
-  return json ? JSON.parse(json) : undefined
-}
-
-// Currently unused
-export const getUserFromCookie = req => {
-  if (!req.headers.cookie) {
-    return undefined
-  }
-  const jwtCookie = req.headers.cookie
-    .split(';')
-    .find(c => c.trim().startsWith('jwt='))
-  if (!jwtCookie) {
-    return undefined
-  }
-  const jwt = jwtCookie.split('=')[1]
-  return jwtDecode(jwt)
 }
 
 /**
@@ -81,6 +44,12 @@ export const getTokenFromCookie = req => {
   return jwtCookie.split('=')[1]
 }
 
+/**
+ * getTokenFromCookieRes(arg) - used specifically for RESPONSE cookies on SSR next.js
+ *
+ * @param {Object} cookies - from Server-side
+ * @returns {JWT-Token}
+ */
 export const getTokenFromCookieRes = cookies => {
   return cookies[0]
     .split(';')
@@ -88,11 +57,27 @@ export const getTokenFromCookieRes = cookies => {
     .split('=')[1]
 }
 
+/**
+ * getCookiesFromServerResponse(arg)
+ * - Helper hack to get cookies from headers on Next.js Server response
+ *
+ * @param {Object} headers - from Server-side
+ * @returns {Cookie key/value [array]}
+ */
 export const getCookiesFromServerResponse = ctxHeaders => {
   const resCookies = ctxHeaders['set-cookie']
   return resCookies
 }
 
+/**
+ * findTokenToDecode(headers, req)
+ * - Next.js Serverside func to first look for new token being sent from API
+ * - If none is found on RES, use req headers
+ *
+ * @param {Object} ctxheaders - from Server-side
+ * @param {Object} ctxRequest - from Server-side
+ * @returns {Cookie key/value [array]}
+ */
 export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   const cookies = getCookiesFromServerResponse(ctxHeaders)
 
@@ -128,24 +113,6 @@ export const getUserFromJWT = token => {
         [key]: tokenDecoded[key]
       }
     }, {})
-}
-
-// Not currently used
-export const isTokenExpired = token => {
-  let jwt = token
-  if (jwt) {
-    let jwtExp = jwt.exp
-    const currentTime = moment().unix()
-    const expired = jwtExp < currentTime // because time goes up
-    // let expiryDate = new Date(0)
-    // expiryDate.setUTCSeconds(jwtExp)
-
-    if (expired) {
-      return true
-    }
-  }
-
-  return false
 }
 
 /**
@@ -199,27 +166,9 @@ export const tokenNeedsRefresh = user => {
   return false
 }
 
-// Not sure if this is used
-export const handleMiddlewareError = async (e, dispatch) => {
-  console.log('handleError from AuthUtils')
-  console.log(e)
-  const error = {
-    message: e.message
-  }
-
-  if (e.logout) {
-    toastr.error('Error:', e.message)
-    dispatch(logUserOut())
-    Router.push(`/auth/login`, `/login`)
-  }
-
-  toastr.error('Error:', e.message)
-}
-
 /**
- * validateUserToken(arg)
+ * validateUserToken(arg, user)
  *
- * @param {Boolean} server-side check
  * @param {Object} Redux Store
  * @param {Object} user
  * @returns {Dispatch Action: logOut}
@@ -229,7 +178,6 @@ export const handleMiddlewareError = async (e, dispatch) => {
  */
 export const validateUserTokenClient = async (store, user) => {
   console.log('validateUser-Client', user)
-
   if (!user) {
     return store.dispatch(logOut())
   }
@@ -259,20 +207,33 @@ export const validateUserTokenClient = async (store, user) => {
   }
 }
 
-// find cookies(jwt)
-// find user from token and pass user in
-// - if there is no user(undefined) - dispatch logout
-// - if there is a new user
-// - return new user to save to redux
-// - return old user to save to redux
+/**
+ * validateUserTokenServer(arg, user)
+ *
+ * @param {Object} Redux Store
+ * @param {Object} user
+ * @returns {Dispatch Action: logOut}
+ * @returns {Dispatch Action: logUserOut} (expired)
+ * @returns {Dispatch Action: saveUserToRedux}
+ */
 export const validateUserTokenServer = async (store, user) => {
+  /*
+  * find cookies(jwt)
+  * find user from token and pass user in to this function from getInitialProps on HOC
+  * - if there is no user(undefined) - dispatch logout
+  * - if there is a new user
+  * - return new user to save to redux
+  * - return old user to save to redux
+  */
   console.log('validateUser-Server', user)
 
   if (!user) {
     return store.dispatch(logOut())
   }
 
-  // if expired log user out
+  /*
+  Expired? Log user out
+  */
   if (isUserExpired(user)) {
     console.log('user is expired')
     try {
@@ -288,18 +249,3 @@ export const validateUserTokenServer = async (store, user) => {
   */
   store.dispatch(saveUserToRedux(user))
 }
-
-// export const fetchCookiesForheader = cookies => {
-//   const allowedKeys = ['jwt', '_csrf']
-//   const array = cookies.split(';').map(c => {
-//     if (c.trim().startsWith('jwt=')) {
-//       return c
-//     }
-//     if (c.trim().startsWith('_csrf=')) {
-//       return c
-//     }
-//   })
-//   // .find(c => c.trim().startsWith('jwt='))
-//   console.log('new array')
-//   console.log(array)
-// }
