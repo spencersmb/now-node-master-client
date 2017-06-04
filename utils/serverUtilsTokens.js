@@ -4,6 +4,13 @@ const fetch = require('isomorphic-unfetch')
 const config = require('../config/envConfigServer')
 // const envConfig = require('../../server')
 
+/**
+ * extractJWTFromCookieParser(arg)
+ *
+ * @param [Array] server cookies array
+ * @returns {String} undefined
+ * @returns {String} cookie string
+ */
 exports.extractJWTFromCookieParser = cookies => {
   console.log('cookies - extractJWTFromCookieParser')
   console.log(cookies)

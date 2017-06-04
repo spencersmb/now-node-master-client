@@ -47,6 +47,7 @@ export const handleStatusCheck = async (response, dispatch, actionType) => {
     message: 'There was an error'
   }
 
+  // Specail message for login action error
   if (response.status === 401 && actionType === 'LOG_USER_IN') {
     error.message = 'Incorrect Username or password'
     throw error

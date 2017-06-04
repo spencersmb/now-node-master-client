@@ -14,6 +14,12 @@ export default function ({ dispatch }) {
     // If action does not have payload
     // or, the payload is not a promise
     // send it on
+    /**
+     * - If action object does not have key "payload"
+     * - Or the payload is not a promise
+     * - Ignore apiInterceptor
+     *
+     */
     if (!action.payload || !action.payload.then) {
       return next(action)
     }

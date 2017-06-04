@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import FormData from 'form-data'
-import { logUserOut } from '../actions/authActions'
 
 /**
  * getStoreById(array, ID)
@@ -95,4 +94,10 @@ export const convertToFormData = store => {
   return formData
 }
 
+/**
+ * renderSvg(svg)
+ * - Component Helper to render and svg item
+ *
+ * @param {Object} svg - from importing an svg into react
+ */
 export const renderSvg = Svg => <Svg />
