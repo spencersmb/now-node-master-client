@@ -7,6 +7,8 @@ import { getStores } from '../actions/storesActions'
 
 class editStoreForm extends React.Component {
   static async getInitialProps ({ store, res, query }) {
+    console.log('laoded add store page')
+
     // Get storeID
     await store.dispatch(getStores())
     return { query }

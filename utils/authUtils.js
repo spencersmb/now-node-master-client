@@ -102,17 +102,20 @@ export const getUserFromJWT = token => {
   if (!token) {
     return undefined
   }
-  const tokenDecoded = jwtDecode(token)
-  const allowedKeys = ['name', 'email', 'exp']
 
-  return Object.keys(tokenDecoded)
-    .filter(key => allowedKeys.includes(key))
-    .reduce((obj, key) => {
-      return {
-        ...obj,
-        [key]: tokenDecoded[key]
-      }
-    }, {})
+  // const tokenDecoded = jwtDecode(token)
+  // const allowedKeys = ['name', 'email', 'exp', 'rfs']
+
+  // return Object.keys(tokenDecoded)
+  //   .filter(key => allowedKeys.includes(key))
+  //   .reduce((obj, key) => {
+  //     return {
+  //       ...obj,
+  //       [key]: tokenDecoded[key]
+  //     }
+  //   }, {})
+
+  return jwtDecode(token)
 }
 
 /**
@@ -179,30 +182,16 @@ export const tokenNeedsRefresh = user => {
 export const validateUserTokenClient = async (store, user) => {
   console.log('validateUser-Client', user)
   if (!user) {
-    return store.dispatch(logOut())
+    return store.dispatch(logUserOut())
   }
 
   // if expired log user out
   if (isUserExpired(user)) {
     console.log('user is expired')
     try {
-      await store.dispatch(logUserOut())
+      await store.dispatch(refreshTokenAction(user))
     } catch (e) {
-      console.log('log user out error')
-    }
-    return
-  }
-
-  // if expired log user out
-  if (tokenNeedsRefresh(user)) {
-    console.log('user needs new token')
-    // Make api call and dispatch update
-    // Middleware should auto detect the updated tokens param and dispatch action accordingly
-    try {
-      await store.dispatch(refreshTokenAction())
-    } catch (e) {
-      console.log('refresh Error')
-      console.log(e)
+      console.log('refresh token error')
     }
   }
 }
@@ -218,7 +207,7 @@ export const validateUserTokenClient = async (store, user) => {
  */
 export const validateUserTokenServer = async (store, user) => {
   /*
-  * find cookies(jwt)
+  * find cookies on browser(jwt)
   * find user from token and pass user in to this function from getInitialProps on HOC
   * - if there is no user(undefined) - dispatch logout
   * - if there is a new user
@@ -228,21 +217,41 @@ export const validateUserTokenServer = async (store, user) => {
   console.log('validateUser-Server', user)
 
   if (!user) {
-    return store.dispatch(logOut())
+    return store.dispatch(logUserOut())
   }
 
   /*
-  Expired? Log user out
+  Expired?
+  - Check if the user is expired
+  -- IF YES
+  - Make api call to DB passing the JWT using POST sending "user" over
+  - Check if user email is in DB(valid user)
+  - compare refresh Token, with Session RefreshToken
+  -- IF YES
+  - Generate new refreshToken and update the found Session
+  - Generate new JWT and new CSRF tokens with new expire dates
+  - Send res back to client
+  -- IF NO( refresh tokens to do not match)
+  - Send res.status 401 back and then log user out
+  -- If NO ( user not expired )
+  - just save user to redux
   */
-  if (isUserExpired(user)) {
-    console.log('user is expired')
-    try {
-      await store.dispatch(logUserOut())
-    } catch (e) {
-      console.log('log user out error')
-    }
-    return
-  }
+  // if (isUserExpired(user)) {
+  //   console.log('user is expired')
+
+  //   // Send user email + refresh token
+  //   // to first check if the user is in the DB
+  //   // Then check if the user refreskToken in DB matches the rfsh token sent over
+  //   // Then optionally validate JWT
+  //   // Then create new refresh token, new JWT, new CSRF and send back
+  //   await store.dispatch(refreshTokenAction(user))
+  //   // try {
+  //   //   await store.dispatch(logUserOut())
+  //   // } catch (e) {
+  //   //   console.log('log user out error')
+  //   // }
+  //   // return
+  // }
 
   /*
   Save user from token

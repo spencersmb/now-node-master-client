@@ -2,7 +2,6 @@ const jwtDecode = require('jwt-decode')
 const moment = require('moment')
 const fetch = require('isomorphic-unfetch')
 const config = require('../config/envConfigServer')
-// const envConfig = require('../../server')
 
 /**
  * extractJWTFromCookieParser(arg)
@@ -12,8 +11,8 @@ const config = require('../config/envConfigServer')
  * @returns {String} cookie string
  */
 exports.extractJWTFromCookieParser = cookies => {
-  console.log('cookies - extractJWTFromCookieParser')
-  console.log(cookies)
+  // console.log('cookies - extractJWTFromCookieParser')
+  // console.log(cookies)
 
   if (!cookies.jwt) {
     return undefined
@@ -22,6 +21,13 @@ exports.extractJWTFromCookieParser = cookies => {
   return jwtDecode(cookies.jwt)
 }
 
+/**
+ * extractUserFromJwt(arg)
+ *
+ * @param {String} jwt string
+ * @returns {String} undefined
+ * @returns {String} cookie string
+ */
 exports.extractUserFromJwt = jwt => {
   const jwtDecoded = jwtDecode(jwt)
   return {
@@ -72,7 +78,7 @@ exports.isExpired = token => {
 
 exports.getNewTokens = async cookies => {
   const response = await fetch(`${config.envConfig.BACKEND_URL}/api/refresh`, {
-    method: 'GET',
+    method: 'POST',
     headers: {
       cookie: cookies
     },

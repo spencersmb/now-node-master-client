@@ -67,10 +67,10 @@ export const logUserOut = () => async dispatch => {
 
 export const logOut = () => ({ type: actionTypes.LOG_OUT })
 
-export const refreshTokenAction = () => dispatch => {
+export const refreshTokenAction = user => dispatch => {
   console.log('refreshtokenAction called')
 
-  const request = authApi.fetchRefreshTokens()
+  const request = authApi.fetchRefreshTokens(user)
 
   return dispatch({
     type: 'FETCH_NEW_TOKENS',
@@ -78,16 +78,16 @@ export const refreshTokenAction = () => dispatch => {
   })
 }
 
-export const refreshTokenActionServer = cookies => dispatch => {
-  console.log('refreshtokenAction called')
+// export const refreshTokenActionServer = cookies => dispatch => {
+//   console.log('refreshtokenAction called')
 
-  const request = authApi.fetchRefreshTokensServer(cookies)
+//   const request = authApi.fetchRefreshTokensServer(cookies)
 
-  return dispatch({
-    type: 'FETCH_NEW_TOKENS',
-    payload: request
-  })
-}
+//   return dispatch({
+//     type: 'FETCH_NEW_TOKENS',
+//     payload: request
+//   })
+// }
 
 // export const refreshUser = user => {
 //   return { type: actionTypes.REFRESH_USER, user }

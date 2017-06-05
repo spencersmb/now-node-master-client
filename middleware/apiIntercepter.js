@@ -11,9 +11,6 @@ export default function ({ dispatch }) {
     // console.log('action')
     // console.log(action.type)
 
-    // If action does not have payload
-    // or, the payload is not a promise
-    // send it on
     /**
      * - If action object does not have key "payload"
      * - Or the payload is not a promise

@@ -16,38 +16,7 @@ class authApi {
       body: JSON.stringify(user)
     })
   }
-  // static async signInUser (user) {
-  //   console.log('signin user api CALL')
 
-  //   const url = `${env.BACKEND_URL}/api/signin`
-  //   const response = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     // mode: 'cors',
-  //     credentials: 'include', // Don't forget to specify this if you need cookies
-  //     body: JSON.stringify(user)
-  //   })
-  //   const body = await response.json()
-  //   console.log('SIGN USER IN CALL DONE')
-  //   console.log(body)
-
-  //   if (response.status !== 200) {
-  //     console.log('error in signin')
-
-  //     const error = {
-  //       message: 'wrong username/password'
-  //     }
-  //     console.log('error')
-  //     console.log(error)
-
-  //     throw error.message
-  //   }
-  //   // console.log(body)
-
-  //   return body
-  // }
   static async signOutUser () {
     console.log('Sign user out')
 
@@ -110,11 +79,13 @@ class authApi {
 
     return body
   }
-  static async fetchRefreshTokens () {
+  static async fetchRefreshTokens (user) {
+    // user.rfs =
+    //   'pQ3Nbr2wGO2eZngU89aiTKZbFn1EhmuOzUypy2eU2vF7JO6gkDM8FMk3AYq591gi90Ou3rNlciv01wuKlt5TKUEgR7LCF84Oalsn592kCbKYeJwsBxDxYpaaB6gSFl7IE2pQ0IID8v3Yt6tiU7nXGlkacM0WZRjHQoTpMvyBbdaWwUfSrdaGvRXAobX7FOacitrvTgZ0GzFyqI4rIJZRYfvyhVp8ScP0Ur7Q3BmozOF96YeuQtMIJ67tTuy2hlvY'
     // Must create FormData when posting an image
     const url = `${env.BACKEND_URL}/api/refresh`
     const response = await fetch(url, {
-      method: 'GET',
+      method: 'POST',
       credentials: 'include' // Don't forget to specify this if you need cookies
     })
 

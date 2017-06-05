@@ -9,8 +9,9 @@ exports.tokenRefreshCheck = async (req, res, next) => {
   // console.log('req cookies from token ctrl')
 
   const jwt = tokenUtils.extractJWTFromCookieParser(req.cookies)
-  console.log('JWT')
-  console.log(jwt)
+  // console.log('JWT')
+  // console.log(jwt)
+  const expired = tokenUtils.isExpired(jwt)
 
   if (!jwt) {
     console.log('no token found next.js server')
@@ -18,21 +19,13 @@ exports.tokenRefreshCheck = async (req, res, next) => {
     return
   }
 
-  // IF TOKEN IS EXPIRED?
-  if (tokenUtils.isExpired(jwt)) {
-    console.log('token expired on next js server')
-
-    res.clearCookie('jwt')
-    res.clearCookie('_CSRF')
+  if (!expired) {
+    console.log('jwt found but not expired')
     next()
     return
   }
 
-  // does token need refresh
-  if (!tokenUtils.checkTokenRefreshTime(jwt)) {
-    next()
-    return
-  }
+  console.log('token expired on next js server')
 
   // // refresh token
   const newTokens = await tokenUtils.getNewTokens(req.headers.cookie)
@@ -40,8 +33,6 @@ exports.tokenRefreshCheck = async (req, res, next) => {
   // Check for new tokens coming from API
   // console.log('new tokens')
   // console.log(newTokens)
-
   newTokens.map(token => res.append('Set-Cookie', token))
-
   next()
 }
