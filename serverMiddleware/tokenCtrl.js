@@ -11,8 +11,8 @@ exports.tokenRefreshCheck = async (req, res, next) => {
   // console.log('req cookies from token ctrl')
 
   const jwt = tokenUtils.extractJWTFromCookieParser(req.cookies)
-  console.log('JWT')
-  console.log(jwt)
+  // console.log('JWT')
+  // console.log(jwt)
 
   if (!jwt) {
     console.log('no token found next.js server')

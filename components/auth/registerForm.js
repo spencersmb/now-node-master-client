@@ -18,9 +18,6 @@ export class RegisterComponent extends Component {
     // call action creator to sign up the user on the server
     try {
       const response = await this.props.authenticateUser(formProps)
-      console.log('response in handleform submit')
-      console.log(response)
-
       const decodedUser = getUserFromJWT(response)
       this.props.saveUserToRedux(decodedUser)
 
@@ -28,6 +25,9 @@ export class RegisterComponent extends Component {
       Router.push(`/stores`)
       // push to new page
     } catch (e) {
+      console.log('handle error in register form')
+      console.log(e)
+
       if (Array.isArray(e)) {
         e.forEach(err => {
           toastr.error('Error:', err.msg)

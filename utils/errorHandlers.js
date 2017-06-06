@@ -43,7 +43,7 @@ export const handleStatusCheck = async (response, dispatch, actionType) => {
   console.log('handle Status Check')
 
   const error = {
-    showMid: false,
+    showMid: false, // show middleware error instead of handling error in a component
     message: 'There was an error'
   }
 
@@ -58,6 +58,20 @@ export const handleStatusCheck = async (response, dispatch, actionType) => {
     error.message = 'Please login again'
     await dispatch(logUserOut())
     throw error
+  }
+
+  if (response.status === 422) {
+    const newError = await response.json()
+
+    /*
+    * The registerform could return an array of errors
+    * normally it will just return an {error: 'my error msg'}
+    */
+    if (Array.isArray(newError.errors)) {
+      throw newError.errors
+    } else {
+      throw newError.error
+    }
   }
 
   if (response.status !== 200) {

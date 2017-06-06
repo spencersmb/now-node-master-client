@@ -3,8 +3,6 @@ import env from '../config/envConfig'
 
 class authApi {
   static async signInUser (user) {
-    console.log('signin user api CALL')
-
     const url = `${env.BACKEND_URL}/api/signin`
     return fetch(url, {
       method: 'POST',
@@ -43,6 +41,7 @@ class authApi {
     }
     return body
   }
+
   static async registerUser (user) {
     const url = `${env.BACKEND_URL}/api/register`
     const response = await fetch(url, {
@@ -55,32 +54,8 @@ class authApi {
     })
 
     return response
-
-    // const body = await response.json()
-    // console.log('body')
-    // console.log(body)
-
-    // if (response.status !== 200) {
-    //   //
-    //   // check for multiple errors on registration
-    //   //
-    //   if (body.errors) {
-    //     const error = {
-    //       errors: body.errors
-    //     }
-
-    //     throw error.errors
-    //   } else {
-    //     const error = {
-    //       message: body.message
-    //     }
-
-    //     throw error.message
-    //   }
-    // }
-
-    // return body
   }
+
   static async fetchRefreshTokens (user) {
     // user.rfs =
     //   'pQ3Nbr2wGO2eZngU89aiTKZbFn1EhmuOzUypy2eU2vF7JO6gkDM8FMk3AYq591gi90Ou3rNlciv01wuKlt5TKUEgR7LCF84Oalsn592kCbKYeJwsBxDxYpaaB6gSFl7IE2pQ0IID8v3Yt6tiU7nXGlkacM0WZRjHQoTpMvyBbdaWwUfSrdaGvRXAobX7FOacitrvTgZ0GzFyqI4rIJZRYfvyhVp8ScP0Ur7Q3BmozOF96YeuQtMIJ67tTuy2hlvY'
@@ -93,6 +68,7 @@ class authApi {
 
     return response
   }
+
   static async fetchRefreshTokensServer (cookies) {
     // Must create FormData when posting an image
     const url = `${env.BACKEND_URL}/api/refresh`

@@ -100,6 +100,7 @@ class InitializeFromStateForm extends React.Component {
         )
       } catch (e) {
         // console.log('error from middleware in storeForm')
+        toastr.error('Error:', e)
       }
     }
   }
