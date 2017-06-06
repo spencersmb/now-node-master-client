@@ -80,6 +80,7 @@ export const getCookiesFromServerResponse = ctxHeaders => {
  */
 export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   const cookies = getCookiesFromServerResponse(ctxHeaders)
+  console.log('find token on server')
 
   if (cookies) {
     console.log('has new user')
@@ -217,44 +218,13 @@ export const validateUserTokenServer = async (store, user) => {
   console.log('validateUser-Server', user)
 
   if (!user) {
-    return store.dispatch(logUserOut())
+    return store.dispatch(logOut())
   }
-
-  /*
-  Expired?
-  - Check if the user is expired
-  -- IF YES
-  - Make api call to DB passing the JWT using POST sending "user" over
-  - Check if user email is in DB(valid user)
-  - compare refresh Token, with Session RefreshToken
-  -- IF YES
-  - Generate new refreshToken and update the found Session
-  - Generate new JWT and new CSRF tokens with new expire dates
-  - Send res back to client
-  -- IF NO( refresh tokens to do not match)
-  - Send res.status 401 back and then log user out
-  -- If NO ( user not expired )
-  - just save user to redux
-  */
-  // if (isUserExpired(user)) {
-  //   console.log('user is expired')
-
-  //   // Send user email + refresh token
-  //   // to first check if the user is in the DB
-  //   // Then check if the user refreskToken in DB matches the rfsh token sent over
-  //   // Then optionally validate JWT
-  //   // Then create new refresh token, new JWT, new CSRF and send back
-  //   await store.dispatch(refreshTokenAction(user))
-  //   // try {
-  //   //   await store.dispatch(logUserOut())
-  //   // } catch (e) {
-  //   //   console.log('log user out error')
-  //   // }
-  //   // return
-  // }
 
   /*
   Save user from token
   */
+  console.log('save user')
+
   store.dispatch(saveUserToRedux(user))
 }

@@ -3,8 +3,9 @@ import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import renderField from '../inputs/renderField'
-import { authenticateUser } from '../../actions/authActions'
+import { authenticateUser, saveUserToRedux } from '../../actions/authActions'
 import { toastr } from 'react-redux-toastr'
+import { getUserFromJWT } from '../../utils/authUtils'
 import Router from 'next/router'
 
 export class RegisterComponent extends Component {
@@ -17,7 +18,13 @@ export class RegisterComponent extends Component {
     // call action creator to sign up the user on the server
     try {
       const response = await this.props.authenticateUser(formProps)
-      toastr.success('Success:', 'User: ' + response.user.name + ' created!')
+      console.log('response in handleform submit')
+      console.log(response)
+
+      const decodedUser = getUserFromJWT(response)
+      this.props.saveUserToRedux(decodedUser)
+
+      toastr.success('Success:', 'User: ' + decodedUser.name + ' created!')
       Router.push(`/stores`)
       // push to new page
     } catch (e) {
@@ -119,7 +126,8 @@ const RegisterForm = reduxForm({
 
 const mapDispatchToProps = dispatch => {
   return {
-    authenticateUser: bindActionCreators(authenticateUser, dispatch)
+    authenticateUser: bindActionCreators(authenticateUser, dispatch),
+    saveUserToRedux: bindActionCreators(saveUserToRedux, dispatch)
   }
 }
 

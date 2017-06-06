@@ -54,30 +54,32 @@ class authApi {
       body: JSON.stringify(user)
     })
 
-    const body = await response.json()
-    console.log('body')
-    console.log(body)
+    return response
 
-    if (response.status !== 200) {
-      //
-      // check for multiple errors on registration
-      //
-      if (body.errors) {
-        const error = {
-          errors: body.errors
-        }
+    // const body = await response.json()
+    // console.log('body')
+    // console.log(body)
 
-        throw error.errors
-      } else {
-        const error = {
-          message: body.message
-        }
+    // if (response.status !== 200) {
+    //   //
+    //   // check for multiple errors on registration
+    //   //
+    //   if (body.errors) {
+    //     const error = {
+    //       errors: body.errors
+    //     }
 
-        throw error.message
-      }
-    }
+    //     throw error.errors
+    //   } else {
+    //     const error = {
+    //       message: body.message
+    //     }
 
-    return body
+    //     throw error.message
+    //   }
+    // }
+
+    // return body
   }
   static async fetchRefreshTokens (user) {
     // user.rfs =
@@ -85,7 +87,7 @@ class authApi {
     // Must create FormData when posting an image
     const url = `${env.BACKEND_URL}/api/refresh`
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'GET',
       credentials: 'include' // Don't forget to specify this if you need cookies
     })
 

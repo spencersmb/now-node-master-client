@@ -78,7 +78,7 @@ exports.isExpired = token => {
 
 exports.getNewTokens = async cookies => {
   const response = await fetch(`${config.envConfig.BACKEND_URL}/api/refresh`, {
-    method: 'POST',
+    method: 'GET',
     headers: {
       cookie: cookies
     },

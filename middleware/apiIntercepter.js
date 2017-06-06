@@ -51,6 +51,17 @@ export default function ({ dispatch }) {
         return body.token
       }
 
+      if (body.token && action.type === 'CREATE_USER') {
+        const newAction = {
+          type: action.type,
+          data: body.token
+        }
+
+        // Send through all the middlewares again
+        dispatch(newAction)
+        return body.token
+      }
+
       if (body.token && action.type !== 'LOG_OUT') {
         console.log('body has token in it')
         console.log('save new user to redux')

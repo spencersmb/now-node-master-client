@@ -21,34 +21,40 @@ export const signinUser = user => async dispatch => {
 
 export const saveUserToRedux = user => dispatch =>
   dispatch({
-    type: actionTypes.LOGIN_SUCCESS,
+    type: actionTypes.SAVE_USER,
     user
   })
 
 // THIS NEEDS TO BE UPDATED
 // Used on the auth/signed-in.js & AUTH0 Class
 export const authenticateUser = user => async dispatch => {
+  const response = authApi.registerUser(user)
+
+  return dispatch({
+    type: actionTypes.CREATE_USER,
+    payload: response // request = Promise, must send data on key 'payload`
+  })
   /**
    * 1. Make API CALL to POST user
    * 2. on success - setToken to localStorage/cookie
    * 3. decode user from localStorage and set in redux for AUTH
    */
-  try {
-    const response = await authApi.registerUser(user)
-    const decodedUser = getUserFromJWT(response.token)
-    return dispatch(saveUserToRedux(decodedUser))
-    // setToken(response.token)
-    // return dispatch(saveUserToRedux(getUserFromLocalStorage()))
-  } catch (e) {
-    throw e
-  }
+  // try {
+  //   // const response = await authApi.registerUser(user)
+  //   // const decodedUser = getUserFromJWT(response.token)
+  //   // return dispatch(saveUserToRedux(decodedUser))
+  //   // setToken(response.token)
+  //   // return dispatch(saveUserToRedux(getUserFromLocalStorage()))
+  // } catch (e) {
+  //   throw e
+  // }
 }
 
 // Not currently Used
 // Used on the auth/signed-in.js & AUTH0 Class
-export const SaveUser = user => dispatch => {
-  return dispatch({ type: actionTypes.LOGIN_SUCCESS, user })
-}
+// export const SaveUser = user => dispatch => {
+//   return dispatch({ type: actionTypes.LOGIN_SUCCESS, user })
+// }
 
 // Used on the auth/sign-off.js
 export const logUserOut = () => async dispatch => {
@@ -113,5 +119,22 @@ export const refreshTokenAction = user => dispatch => {
 //   */
 //   if (isServer) {
 //     return { type: actionTypes.LOGIN_SUCCESS, user }
+//   }
+// }
+
+// export const authenticateUser = user => async dispatch => {
+//   /**
+//    * 1. Make API CALL to POST user
+//    * 2. on success - setToken to localStorage/cookie
+//    * 3. decode user from localStorage and set in redux for AUTH
+//    */
+//   try {
+//     const response = await authApi.registerUser(user)
+//     const decodedUser = getUserFromJWT(response.token)
+//     return dispatch(saveUserToRedux(decodedUser))
+//     // setToken(response.token)
+//     // return dispatch(saveUserToRedux(getUserFromLocalStorage()))
+//   } catch (e) {
+//     throw e
 //   }
 // }
