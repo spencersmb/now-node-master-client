@@ -8,6 +8,7 @@ export default {
   },
   stores: [],
   editingStore: {},
+  userAccount: {},
   filtered: {
     tags: [],
     stores: []

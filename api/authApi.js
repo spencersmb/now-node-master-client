@@ -15,6 +15,7 @@ class authApi {
     })
   }
 
+  // Needs updating
   static async signOutUser () {
     console.log('Sign user out')
 
@@ -69,8 +70,8 @@ class authApi {
     return response
   }
 
+  // is this being used?
   static async fetchRefreshTokensServer (cookies) {
-    // Must create FormData when posting an image
     const url = `${env.BACKEND_URL}/api/refresh`
     const response = await fetch(url, {
       method: 'GET',
@@ -78,6 +79,48 @@ class authApi {
         cookie: cookies
       },
       credentials: 'include' // here's the magical line that fixed everything
+    })
+
+    return response
+  }
+
+  static async updateUser (user) {
+    const url = `${env.BACKEND_URL}/api/account`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Don't forget to specify this if you need cookies
+      body: JSON.stringify(user)
+    })
+
+    return response
+  }
+
+  static async forgotUser (email) {
+    const url = `${env.BACKEND_URL}/api/account/forgot`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Don't forget to specify this if you need cookies
+      body: JSON.stringify(email)
+    })
+
+    return response
+  }
+
+  static async resetPassword (passwordToken) {
+    const url = `${env.BACKEND_URL}/api/account/reset`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Don't forget to specify this if you need cookies
+      body: JSON.stringify(passwordToken)
     })
 
     return response

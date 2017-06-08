@@ -67,7 +67,6 @@ export default (Page, title = '') => {
             <title>{title} | {envConfig.WEBSITE_TITLE}</title>
           </Head>
           <Header {...this.props} />
-          <Page {...this.props} />
           <ReduxToastr
             timeOut={6000}
             newestOnTop={false}
@@ -77,6 +76,8 @@ export default (Page, title = '') => {
             transitionOut='fadeOut'
             progressBar={false}
           />
+          <Page {...this.props} />
+
         </div>
       )
     }

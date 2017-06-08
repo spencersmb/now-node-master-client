@@ -5,18 +5,25 @@ import { initStore } from '../../store'
 import withRedux from 'next-redux-wrapper'
 import standardLayout from '../../hocs/standardLayout'
 import LoginForm from '../../components/auth/loginForm'
+import ForgotPasswordForm from '../../components/auth/forgotPasswordForm'
+import { toastr } from 'react-redux-toastr'
+
 const pageTitle = 'Login'
 
 export class LogInPage extends Component {
   static async getInitialProps ({ store, res, query }) {
-    // Get storeID
-    // await store.dispatch(getStores())
     return { query }
+  }
+  componentDidMount () {
+    if (this.props.query.error) {
+      toastr.error('Error:', 'Password reset is invalid or has expired')
+    }
   }
   render () {
     return (
       <div className='inner' style={{ paddingTop: 30 }}>
         <LoginForm />
+        <ForgotPasswordForm />
       </div>
     )
   }

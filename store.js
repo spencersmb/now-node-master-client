@@ -7,6 +7,7 @@ import { authReducer } from './reducers/authReducer'
 import { timeReducer } from './reducers/timeReducer'
 import { reducer as toastrReducer } from 'react-redux-toastr'
 import { editStoreReducer } from './reducers/editStoreReducer'
+import { editAccountReducer } from './reducers/editAccountReducer'
 import { tagsReducer } from './reducers/tagsReducer'
 import apiIntercepter from './middleware/apiIntercepter'
 
@@ -17,6 +18,7 @@ export const initStore = (initialState = {}) => {
     stores: storeReducer,
     form: formReducer,
     editingStore: editStoreReducer,
+    userAccount: editAccountReducer,
     filtered: tagsReducer,
     toastr: toastrReducer,
     time: timeReducer

@@ -181,7 +181,7 @@ export const tokenNeedsRefresh = user => {
  * @returns {Dispatch Action: saveUserToRedux}
  */
 export const validateUserTokenClient = async (store, user) => {
-  console.log('validateUser-Client', user)
+  console.log('validateUser-Client')
   if (!user) {
     return store.dispatch(logUserOut())
   }

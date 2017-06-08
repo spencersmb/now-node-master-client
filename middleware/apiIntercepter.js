@@ -79,8 +79,8 @@ export default function ({ dispatch }) {
         data: body.data
       }
 
-      // console.log('new action')
-      // console.log(newAction)
+      console.log('new action')
+      console.log(newAction)
 
       // Send through all the middlewares again
       dispatch(newAction)

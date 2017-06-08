@@ -41,6 +41,11 @@ export const renderField = ({
       )
     }
   }
+  // console.log('renderfield', label)
+  // console.log('error', error)
+  // console.log('pristine', pristine)
+  // console.log('invalid', invalid)
+  // console.log('touched', touched)
 
   return (
     <div className={groupClass}>
@@ -52,7 +57,9 @@ export const renderField = ({
         className={inputClass}
       />
       {renderIcon()}
-      {!pristine || (touched && invalid && <span>{error}</span>)}
+      {(!pristine && touched && invalid && <span>{error}</span>) ||
+        (!pristine && !touched && invalid && <span>{error}</span>)}
+
     </div>
   )
 }

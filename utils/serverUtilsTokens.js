@@ -92,3 +92,14 @@ exports.getNewTokens = async cookies => {
   const responseCookies = response.headers
   return responseCookies._headers['set-cookie']
 }
+
+exports.resetCheck = async resetToken => {
+  return fetch(`${config.envConfig.BACKEND_URL}/api/account/resetCheck`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include', // Don't forget to specify this if you need cookies
+    body: JSON.stringify({ resetToken: resetToken })
+  })
+}

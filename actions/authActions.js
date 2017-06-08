@@ -49,6 +49,40 @@ export const refreshTokenAction = user => dispatch => {
   })
 }
 
+export const loadAccountForm = user => {
+  return {
+    type: actionTypes.LOAD_USER_DATA,
+    user
+  }
+}
+
+export const updateUser = user => dispatch => {
+  const request = authApi.updateUser(user)
+
+  return dispatch({
+    type: actionTypes.UPDATE_USER,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
+}
+
+export const forgotUser = email => dispatch => {
+  const request = authApi.forgotUser(email)
+
+  return dispatch({
+    type: actionTypes.FORGOT_USER,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
+}
+
+export const resetPassword = passwordToken => dispatch => {
+  const request = authApi.resetPassword(passwordToken)
+
+  return dispatch({
+    type: actionTypes.RESET_PASSWORD,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
+}
+
 // export const refreshTokenActionServer = cookies => dispatch => {
 //   console.log('refreshtokenAction called')
 

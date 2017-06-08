@@ -41,6 +41,7 @@ export const handleMiddlewareError = async (e, dispatch) => {
  */
 export const handleStatusCheck = async (response, dispatch, actionType) => {
   console.log('handle Status Check')
+  console.log(response)
 
   const error = {
     showMid: false, // show middleware error instead of handling error in a component
