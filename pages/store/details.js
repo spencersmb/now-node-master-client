@@ -4,7 +4,7 @@ import { initStore } from '../../store'
 import withRedux from 'next-redux-wrapper'
 import standardLayout from '../../hocs/standardLayout'
 import { getSingleStore, getStores } from '../../actions/storesActions'
-import { handleError } from '../../utils/authUtils'
+import { handleError, findCookies } from '../../utils/authUtils'
 
 const pageTitle = 'Our Store'
 
@@ -13,8 +13,8 @@ const pageTitle = 'Our Store'
 // but the HOC will reRoute
 
 class StorePage extends React.Component {
-  static async getInitialProps ({ store, res, query }) {
-    const slug = query.slug
+  static async getInitialProps (ctx) {
+    const slug = ctx.query.slug
     let post = ''
 
     /*
@@ -25,11 +25,18 @@ class StorePage extends React.Component {
       /* technically we should be filtering off the redux data, but right now im just
       testing sending data down from getInitial props to populate page
       */
-      post = await store.dispatch(getSingleStore(slug))
+      post = await ctx.store.dispatch(getSingleStore(slug))
+      // const cookies = findCookies(ctx.res._headers, ctx.req)
+      // post = process.browser
+      //   ? ''
+      //   : await ctx.store.dispatch(getSingleStore(slug, cookies))
       console.log('post')
       console.log(post)
     } catch (e) {
-      handleError(e, store)
+      console.log('e')
+      console.log(e)
+
+      // handleError(e, ctx.store)
     }
 
     return { post }
@@ -37,7 +44,7 @@ class StorePage extends React.Component {
 
   async componentDidMount () {
     // load all stores as 2nd call for backup
-    await this.props.dispatch(getStores())
+    // await this.props.dispatch(getStores())
   }
 
   render () {

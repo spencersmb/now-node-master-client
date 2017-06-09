@@ -59,8 +59,6 @@ class StoreApi {
   }
 
   static async getSingleStore (slug) {
-    console.log('Call singelstore')
-
     const url = `${env.BACKEND_URL}/api/store/${slug}`
     const response = await fetch(url, {
       method: 'GET',
@@ -68,16 +66,16 @@ class StoreApi {
         'Content-Type': 'application/json'
       }
     })
-
     // status check must be above BODY variable
-    handleStatusCheck(response)
+    // handleStatusCheck(response)
 
-    // Resolve here to return the array below instead of store[]
-    const body = await response.json()
-    console.log('body from getSingStore')
-    console.log(body)
+    // // Resolve here to return the array below instead of store[]
+    // const body = await response.json()
+    // console.log('body from getSingStore')
+    // console.log(body)
 
-    return body.store
+    // return body.store
+    return response
   }
 
   static getStores () {
@@ -140,6 +138,7 @@ class StoreApi {
     // Send PROMISE TO ACTION TO SEND THROUGH REDUCER
     return response
   }
+
   static updateStore (store) {
     const formData = convertToFormData(store)
 

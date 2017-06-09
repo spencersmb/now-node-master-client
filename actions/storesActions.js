@@ -14,27 +14,34 @@ export const getTagsList = tag => async (dispatch, getState) => {
 export const getSingleStore = slug => async (dispatch, getState) => {
   console.log('get single store')
 
-  let state = getState()
+  const request = StoreApi.getSingleStore(slug)
 
-  // if nothing is there make api call and then return single store
-  if (state.stores.length === 0) {
-    try {
-      const store = await StoreApi.getSingleStore(slug)
-      dispatch(loadSingleStoreSuccess(store))
-      return store[0]
-    } catch (e) {
-      // handleError(e, dispatch)
-      throw e
-    }
-  }
-  console.log('slug')
-  console.log(slug)
-  console.log('state from getSinglestore')
-  console.log(state.stores)
-  console.log(state.stores.filter(store => store.slug === slug))
+  return dispatch({
+    type: actionTypes.GET_SINGLE_STORE,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
+  // let state = getState()
 
-  // return first item from the array that is filtered
-  return state.stores.filter(store => store.slug === slug)[0]
+  // // if nothing is there make api call and then return single store
+  // if (state.stores.length === 0) {
+  //   try {
+  //     const store = await StoreApi.getSingleStore(slug)
+  //     dispatch(loadSingleStoreSuccess(store))
+  //     return store[0]
+  //   } catch (e) {
+  //     // handleError(e, dispatch)
+  //     throw e
+  //   }
+  // }
+
+  // console.log('slug')
+  // console.log(slug)
+  // console.log('state from getSinglestore')
+  // console.log(state.stores)
+  // console.log(state.stores.filter(store => store.slug === slug))
+
+  // // return first item from the array that is filtered
+  // return state.stores.filter(store => store.slug === slug)[0]
 }
 
 export const getStores = () => (dispatch, getState) => {

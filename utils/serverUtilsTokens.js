@@ -103,3 +103,25 @@ exports.resetCheck = async resetToken => {
     body: JSON.stringify({ resetToken: resetToken })
   })
 }
+
+exports.confirmCheck = async validationToken => {
+  const response = await fetch(
+    `${config.envConfig.BACKEND_URL}/api/account/confirm`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include', // Don't forget to specify this if you need cookies
+      body: JSON.stringify({ token: validationToken })
+    }
+  )
+
+  const responseCookies = response.headers
+
+  if (responseCookies) {
+    return responseCookies._headers['set-cookie']
+  }
+
+  return response
+}

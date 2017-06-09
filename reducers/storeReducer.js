@@ -9,6 +9,8 @@ export const storeReducer = (state = initialState.stores, action) => {
       return [...action.stores]
     case actionTypes.LOAD_SINGLE_STORE_SUCCESS:
       return [...action.store]
+    // case actionTypes.GET_SINGLE_STORE:
+    //   return [...state, action.data]
     case actionTypes.UPDATE_STORE_DATA:
       let newState = state
       state.forEach((item, index) => {

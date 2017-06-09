@@ -92,6 +92,28 @@ export const findTokenToDecode = (ctxHeaders, ctxReq) => {
 }
 
 /**
+ * findTokenToDecode(headers, req)
+ * - Next.js Serverside func to first look for new token being sent from API
+ * - If none is found on RES, use req headers
+ *
+ * @param {Object} ctxheaders - from Server-side
+ * @param {Object} ctxRequest - from Server-side
+ * @returns {Cookie key/value [array]}
+ */
+export const findCookies = (ctxHeaders, ctxReq) => {
+  const cookies = getCookiesFromServerResponse(ctxHeaders)
+  console.log('find token on server')
+
+  if (cookies) {
+    console.log('has new user')
+    return cookies
+  } else {
+    console.log('no new user, use original token if there is one')
+    return ctxReq
+  }
+}
+
+/**
  * getUserFromJWT(arg)
  * - Filter out sensitive info when the token is decoded before adding to redux
  *

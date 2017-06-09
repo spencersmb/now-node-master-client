@@ -29,7 +29,7 @@ export default (Page, title = '') => {
           )
 
       // Get stores on Server-side render for first page load
-      process.browser ? '' : await ctx.store.dispatch(getStores())
+      // process.browser ? '' : await ctx.store.dispatch(getStores())
 
       // send props to the parent > child container
       const pageProps =

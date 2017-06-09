@@ -4,11 +4,28 @@ import { svgs } from '../../config/svgs'
 import { renderSvg } from '../../utils/storeHelpers'
 
 export default props => {
-  const { name, photo, slug, description, _id } = props
+  const { name, photo, slug, description, _id, author, user } = props
 
   const photoUrl = photo || '/static/images/photos/store.png'
 
   const id = _id
+
+  const hasEdit = () => {
+    if (author && author._id === user.sub) {
+      return true
+    }
+    return false
+  }
+
+  const displayEditLink = () => {
+    if (hasEdit()) {
+      return (
+        <Link as={`/store/${id}/edit`} href={`/store/edit?id=${id}`}>
+          <a>{renderSvg(svgs.Pencil)}{name}</a>
+        </Link>
+      )
+    }
+  }
 
   return (
     <div className='store'>
@@ -16,9 +33,7 @@ export default props => {
         <div className='store__actions'>
           <div className='store__action'>
             <div className='store__action--edit'>
-              <Link as={`/store/${id}/edit`} href={`/store/edit?id=${id}`}>
-                <a>{renderSvg(svgs.Pencil)}{name}</a>
-              </Link>
+              {displayEditLink()}
             </div>
           </div>
         </div>

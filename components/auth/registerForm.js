@@ -17,12 +17,12 @@ export class RegisterComponent extends Component {
   async handleFormSubmit (formProps) {
     // call action creator to sign up the user on the server
     try {
-      const response = await this.props.authenticateUser(formProps)
-      const decodedUser = getUserFromJWT(response)
-      this.props.saveUserToRedux(decodedUser)
+      await this.props.authenticateUser(formProps)
+      // const decodedUser = getUserFromJWT(response)
+      // this.props.saveUserToRedux(decodedUser)
 
-      toastr.success('Success:', 'User: ' + decodedUser.name + ' created!')
-      Router.push(`/stores`)
+      toastr.success('Success:', 'User: created!')
+      Router.push(`/auth/confirmRegistration`, `/confirm`)
       // push to new page
     } catch (e) {
       console.log('handle error in register form')
