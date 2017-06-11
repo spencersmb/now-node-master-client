@@ -11,7 +11,7 @@ export default props => {
   const id = _id
 
   const hasEdit = () => {
-    if (author && author._id === user.sub) {
+    if (author && author === user.sub) {
       return true
     }
     return false

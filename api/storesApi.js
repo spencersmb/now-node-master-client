@@ -5,27 +5,6 @@ import FormData from 'form-data'
 import { fetchIntercepter } from './fetchWrapper'
 import { convertToFormData } from '../utils/storeHelpers'
 
-const handleStatusCheck = response => {
-  console.log('handleStatusCheck')
-  console.log(response)
-
-  const error = {
-    message: 'There was an error',
-    logout: false
-  }
-  if (response.status === 401) {
-    error.message = 'User not Authroized'
-    error.logout = true
-
-    throw error
-  }
-
-  if (response.status !== 200) {
-    error.message = response.statusText
-    throw error
-  }
-}
-
 const resolvePromiseError = (promise, reject) => {
   promise.then(res => reject(res.message))
 }

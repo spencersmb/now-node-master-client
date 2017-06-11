@@ -20,7 +20,7 @@ class StoresPage extends React.Component {
   }
 
   render () {
-    const { tags, tag, stores } = this.props
+    const { tags, tag, stores, user } = this.props
     const tagLength = typeof tag === 'string' ? tag.length : 0
     const activeClass = 'tag__link tag__link--active'
 
@@ -40,10 +40,19 @@ class StoresPage extends React.Component {
             </li>
           ))}
         </ul>
-        <StoresList filteredStores={stores} />
+
+        <StoresList filteredStores={stores} user={user} />
       </div>
     )
   }
 }
 
-export default withRedux(initStore)(standardLayout(StoresPage, pageTitle))
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user
+  }
+}
+
+export default withRedux(initStore, mapStateToProps)(
+  standardLayout(StoresPage, pageTitle)
+)

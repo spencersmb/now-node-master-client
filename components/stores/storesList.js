@@ -7,7 +7,7 @@ class storesList extends React.Component {
     const { stores, filteredStores, user } = this.props
     if (filteredStores) {
       return filteredStores.map(store => (
-        <StoreCard key={store._id} {...store} />
+        <StoreCard key={store._id} user={user} {...store} />
       ))
     }
 
