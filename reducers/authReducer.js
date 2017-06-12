@@ -12,6 +12,11 @@ export const authReducer = (state = initialState.user, action) => {
         ...action.user,
         isAuthenticated: true
       })
+    case actionTypes.HEART_TOGGLE:
+      return {
+        ...state,
+        hearts: action.data
+      }
     case actionTypes.REFRESH_TOKEN:
       return Object.assign({}, state, {
         ...action.user,

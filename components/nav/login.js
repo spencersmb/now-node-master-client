@@ -26,6 +26,14 @@ class isSignedIn extends React.Component {
       return (
         <div className='nav__section nav__section--user'>
           <li className='nav__item'>
+            <Link href='/hearts'>
+              <a className='nav__link'>
+                {renderSvg(svgs.Heart)}
+                {user.hearts.length ? user.hearts.length : ''}
+              </a>
+            </Link>
+          </li>
+          <li className='nav__item'>
             <Link href='/auth/account' as='/account'>
               <img
                 src={

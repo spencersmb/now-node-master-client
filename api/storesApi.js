@@ -10,6 +10,7 @@ const resolvePromiseError = (promise, reject) => {
 }
 
 class StoreApi {
+  // convert this
   static async getTagList (tag) {
     const url = `${env.BACKEND_URL}/api/tags/${tag}`
     const response = await fetch(url, {
@@ -37,6 +38,15 @@ class StoreApi {
     return body
   }
 
+  static async heartStore (id) {
+    const url = `${env.BACKEND_URL}/api/stores/${id}/heart`
+    const response = await fetch(url, {
+      method: 'POST',
+      credentials: 'include' // Don't forget to specify this if you need cookies
+    })
+    return response
+  }
+
   static async getSingleStore (slug) {
     const url = `${env.BACKEND_URL}/api/store/${slug}`
     const response = await fetch(url, {
@@ -45,15 +55,6 @@ class StoreApi {
         'Content-Type': 'application/json'
       }
     })
-    // status check must be above BODY variable
-    // handleStatusCheck(response)
-
-    // // Resolve here to return the array below instead of store[]
-    // const body = await response.json()
-    // console.log('body from getSingStore')
-    // console.log(body)
-
-    // return body.store
     return response
   }
 

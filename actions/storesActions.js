@@ -82,6 +82,15 @@ export const addStore = store => dispatch => {
     })
 }
 
+export const heartAction = id => dispatch => {
+  const request = StoreApi.heartStore(id)
+
+  return dispatch({
+    type: actionTypes.HEART_TOGGLE,
+    payload: request
+  })
+}
+
 /* Model for Async Actions to go through middleware */
 export const addStoreGriderAction = store => dispatch => {
   const request = StoreApi.addStoreFetch(store)

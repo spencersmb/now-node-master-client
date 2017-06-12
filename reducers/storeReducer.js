@@ -4,7 +4,7 @@ import initialState from './initialState'
 export const storeReducer = (state = initialState.stores, action) => {
   switch (action.type) {
     case actionTypes.SAVE_STORE:
-      return [...state, action.store]
+      return [action.store, ...state]
     case actionTypes.LOAD_STORES_SUCCESS:
       return [...action.stores]
     case actionTypes.LOAD_SINGLE_STORE_SUCCESS:

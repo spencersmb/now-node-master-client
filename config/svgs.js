@@ -7,6 +7,7 @@ import Add from '../static/images/icons/add.svg'
 import MapSvg from '../static/images/icons/map.svg'
 import Pencil from '../static/images/icons/pencil.svg'
 import Logout from '../static/images/icons/logout.svg'
+import Heart from '../static/images/icons/heart.svg'
 
 exports.svgs = {
   Logo,
@@ -16,5 +17,6 @@ exports.svgs = {
   Add,
   MapSvg,
   Pencil,
+  Heart,
   Logout
 }

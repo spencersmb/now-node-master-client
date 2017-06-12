@@ -14,7 +14,7 @@ class Search extends React.Component {
       .map(e => {
         return e.target.value
       })
-      .filter(value => !value | (value.length > 2))
+      .filter(value => !value || value.length > 2)
       .distinctUntilChanged()
       .debounceTime(500)
       // merge all events and ensures that allevents are upto date
@@ -22,6 +22,7 @@ class Search extends React.Component {
       .switchMap(term => (term ? this.search(term) : Rx.Observable.of([])))
       .subscribe(
         response => {
+          // Has results
           if (response.length) {
             console.log('response', response)
             this.setState({
@@ -30,7 +31,16 @@ class Search extends React.Component {
             })
             return
           }
+          // If input is empty clear results
+          if (this.input.value.length <= 2) {
+            this.setState({
+              results: [],
+              showResults: false
+            })
+            return
+          }
 
+          // No results display message
           const input = this.input.value ? `for "${this.input.value}"` : ''
           this.setState({
             results: [{ name: `Sorry No results found ${input}` }],
@@ -45,7 +55,7 @@ class Search extends React.Component {
       showResults: false
     }
   }
-  componentWillMount () {}
+
   componentDidMount () {
     this.input = document.getElementById('searchInput')
     this.input.addEventListener('focus', () => {
@@ -55,24 +65,20 @@ class Search extends React.Component {
       this.setState({ showResults: false })
     })
   }
+
   componentWillUnmount () {
     this.keyUp$.unsubscribe()
   }
+
   keyUpHandler (event) {
     if (![38, 40, 13].includes(event.keyCode)) {
       this.keyUp$.next(event)
     }
   }
-  //   fetch(url).then(r => {
-  //           if (r.status === 200) {
-  //             return r.json()
-  //           } else {
-  //             let reject = Promise.reject(r)
-  //             return reject
-  //           }
-  //         })
 
   async fetchUrl (url) {
+    console.log('make api call')
+
     try {
       const response = await fetch(url)
       if (response.status === 200) {
@@ -83,7 +89,6 @@ class Search extends React.Component {
     }
   }
 
-  // simulate network request with promise
   search (term) {
     const url = `${env.BACKEND_URL}/api/search?q=${term}`
     return Rx.Observable.defer(() => {
