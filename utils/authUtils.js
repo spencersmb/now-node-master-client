@@ -65,6 +65,10 @@ export const getTokenFromCookieRes = cookies => {
  * @returns {Cookie key/value [array]}
  */
 export const getCookiesFromServerResponse = ctxHeaders => {
+  if (!ctxHeaders) {
+    return undefined
+  }
+
   const resCookies = ctxHeaders['set-cookie']
   return resCookies
 }
@@ -91,25 +95,41 @@ export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   }
 }
 
+export const convertResCookiesToString = cookies => {
+  const cookiesArray = []
+  const jwt =
+    'jwt=' +
+    cookies[0].split(';').find(c => c.trim().startsWith('jwt=')).split('=')[1]
+
+  const csrf =
+    '_CSRF=' +
+    cookies[1].split(';').find(c => c.trim().startsWith('_CSRF=')).split('=')[1]
+
+  cookiesArray.push(jwt, csrf)
+  return cookiesArray.toString().replace(',', '; ')
+}
+
 /**
- * findTokenToDecode(headers, req)
+ * findCookies(headers, req)
  * - Next.js Serverside func to first look for new token being sent from API
- * - If none is found on RES, use req headers
+ * - And convert them to a readable string for NODE
  *
  * @param {Object} ctxheaders - from Server-side
  * @param {Object} ctxRequest - from Server-side
  * @returns {Cookie key/value [array]}
  */
 export const findCookies = (ctxHeaders, ctxReq) => {
+  if (ctxHeaders === undefined) {
+    return ctxReq.headers.cookie
+  }
   const cookies = getCookiesFromServerResponse(ctxHeaders)
-  console.log('find token on server')
 
   if (cookies) {
-    console.log('has new user')
-    return cookies
+    console.log('has new cookies')
+    return convertResCookiesToString(cookies)
   } else {
-    console.log('no new user, use original token if there is one')
-    return ctxReq
+    console.log('use old cookies')
+    return ctxReq.headers.cookie
   }
 }
 

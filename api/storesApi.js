@@ -38,6 +38,26 @@ class StoreApi {
     return body
   }
 
+  static async getFavoriteStores (cookies = null) {
+    const url = `${env.BACKEND_URL}/api/stores/fav`
+
+    if (!cookies) {
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include' // Don't forget to specify this if you need cookies
+      })
+      return response
+    }
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        cookie: cookies
+      }
+    })
+    return response
+  }
+
   static async heartStore (id) {
     const url = `${env.BACKEND_URL}/api/stores/${id}/heart`
     const response = await fetch(url, {

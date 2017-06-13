@@ -2,27 +2,46 @@ import React from 'react'
 import { initStore } from '../store'
 // import { bindActionCreators } from 'redux'
 import withRedux from 'next-redux-wrapper'
-import standardLayout from '../hocs/standardLayout'
+import secureLayout from '../hocs/secureLayout'
 import StoresList from '../components/stores/storesList'
-import { getStores } from '../actions/storesActions'
+import { getFavoriteStores } from '../actions/storesActions'
+import { findCookies } from '../utils/authUtils'
 
 const pageTitle = 'Favs'
 
 class Favorites extends React.Component {
-  static async getInitialProps ({ store, res, query }) {
+  static async getInitialProps (ctx) {
     // await this.props.dispatch(getStores())
     // await store.dispatch(getStores())
-    return {}
+    const headers = ctx.res ? ctx.res._headers : undefined
+    try {
+      const stores = await ctx.store.dispatch(
+        getFavoriteStores(findCookies(headers, ctx.req))
+      )
+      return { stores }
+    } catch (e) {
+      console.log('error in hearts.js', e)
+      return {}
+    }
   }
 
   render () {
+    const { stores, user } = this.props
     return (
       <div>
         <h2 className='inner'>Favorite Stores</h2>
-
+        <StoresList filteredStores={stores} user={user} />
       </div>
     )
   }
 }
 
-export default withRedux(initStore)(standardLayout(Favorites, pageTitle))
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user
+  }
+}
+
+export default withRedux(initStore, mapStateToProps)(
+  secureLayout(Favorites, pageTitle)
+)

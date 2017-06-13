@@ -12,6 +12,10 @@ exports.routes = (expressServer, app, handle) => {
     return app.render(req, res, '/other', req.query)
   })
 
+  expressServer.get('/hearts', tokenCtrl.tokenRefreshCheck, (req, res) => {
+    return app.render(req, res, '/hearts', req.query)
+  })
+
   expressServer.get('/account/confirm/:token*?', async (req, res) => {
     const validationToken = req.params.token
 

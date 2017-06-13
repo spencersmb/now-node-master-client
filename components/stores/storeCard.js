@@ -19,9 +19,13 @@ class StoreCard extends React.Component {
     const response = await this.props.heartStore(this.props._id)
 
     // Add Animation to button if the store is in user array
-    response.includes(this.props._id)
-      ? button.classList.add('heart__button--float')
-      : button.classList.remove('heart__button--float')
+    if (response.includes(this.props._id)) {
+      button.classList.add('heart__button--float')
+
+      setTimeout(() => {
+        button.classList.remove('heart__button--float')
+      }, 2500)
+    }
   }
 
   render () {
@@ -87,7 +91,9 @@ class StoreCard extends React.Component {
         </div>
         <div className='store__details'>
           {/* truncater hack */}
-          <p>{description.split(' ').slice(0, 25).join(' ')}</p>
+          <p>
+            {description ? description.split(' ').slice(0, 25).join(' ') : ''}
+          </p>
         </div>
       </div>
     )

@@ -11,6 +11,15 @@ export const getTagsList = tag => async (dispatch, getState) => {
   }
 }
 
+export const getFavoriteStores = cookies => dispatch => {
+  const request = StoreApi.getFavoriteStores(cookies)
+
+  return dispatch({
+    type: actionTypes.GET_FAV_STORES,
+    payload: request
+  })
+}
+
 export const getSingleStore = slug => async (dispatch, getState) => {
   console.log('get single store')
 
