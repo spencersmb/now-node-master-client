@@ -9,7 +9,8 @@ import {
   getUserFromJWT,
   findTokenToDecode,
   validateUserTokenServer,
-  validateUserTokenClient
+  validateUserTokenClient,
+  findCookies
 } from '../utils/authUtils'
 import { getStores } from '../actions/storesActions'
 
@@ -25,7 +26,8 @@ export default (Page, title = '') => {
         ? await validateUserTokenClient(ctx.store, ctx.store.getState().user)
         : await validateUserTokenServer(
             ctx.store,
-            getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req))
+            getUserFromJWT(findTokenToDecode(ctx.res._headers, ctx.req)),
+            findCookies(ctx.res._headers, ctx.req)
           )
 
       // Get stores on Server-side render for first page load

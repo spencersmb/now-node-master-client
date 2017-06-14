@@ -7,6 +7,11 @@ export const authReducer = (state = initialState.user, action) => {
       return Object.assign({}, state, {
         isAuthenticated: !state.isAuthenticated
       })
+    case actionTypes.GET_USER_HEARTS:
+      return {
+        ...state,
+        hearts: action.data
+      }
     case actionTypes.SAVE_USER:
       return Object.assign({}, state, {
         ...action.user,

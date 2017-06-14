@@ -1,27 +1,34 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, FieldArray } from 'redux-form'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import renderField from '../inputs/renderField'
-import { authenticateUser, saveUserToRedux } from '../../actions/authActions'
+import { addRating, addRatingToStore } from '../../actions/storesActions'
 import { toastr } from 'react-redux-toastr'
-import { getUserFromJWT } from '../../utils/authUtils'
 import Router from 'next/router'
+import createFragment from 'react-addons-create-fragment'
 
-export class RegisterComponent extends Component {
+export class ReviewForm extends Component {
   constructor (props, context) {
     super(props, context)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   async handleFormSubmit (formProps) {
+    console.log(formProps)
+
+    formProps.postId = this.props.postId
     // call action creator to sign up the user on the server
     try {
-      await this.props.authenticateUser(formProps)
-      toastr.success('Success:', 'User: created!')
-      Router.push(`/auth/confirmRegistration`, `/confirm`)
+      const newRating = await this.props.addRating(formProps)
+      console.log('rating')
+      console.log(newRating)
+
+      // this.props.addRatingToStore(this.props.postId, newRating)
+      toastr.success('Success:', 'Comment Added')
+      // push to new page
     } catch (e) {
-      console.log('handle error in register form')
+      console.log('handle error in review form')
       console.log(e)
 
       if (Array.isArray(e)) {
@@ -32,6 +39,21 @@ export class RegisterComponent extends Component {
         toastr.error('Error:', e)
       }
     }
+  }
+  buildStars () {
+    const numbers = [5, 4, 3, 2, 1]
+    return numbers.map(num => {
+      return [
+        <Field
+          id={`star${num}`}
+          name='rating'
+          type='radio'
+          component='input'
+          value={`${num}`}
+        />,
+        <label htmlFor={`star${num}`} />
+      ]
+    })
   }
 
   render () {
@@ -49,41 +71,45 @@ export class RegisterComponent extends Component {
     }
 
     return (
-      <form className='form' onSubmit={handleSubmit(this.handleFormSubmit)}>
-        <h2>Sign Up</h2>
-        <Field name='name' type='text' component={renderField} label='Name:' />
+      <form className='reviewer' onSubmit={handleSubmit(this.handleFormSubmit)}>
         <Field
-          name='email'
-          type='email'
-          component={renderField}
+          name='text'
+          component='textarea'
+          placeholder='Did you try this place? Have something to say? Leave a review...'
           label='Email:'
         />
+        <div className='reviewer__meta'>
+          <div className='reviewer__stars'>
+            {this.buildStars()}
+          </div>
+          <input
+            type='submit'
+            className='button'
+            value='Submit Review'
+            disabled={valid === false ? 'disabled' : ''}
+          />
+        </div>
+        {/*
         <Field
           name='password'
           type='password'
           component={renderField}
           label='Password:'
         />
-        {/*{password.error}*/}
+        {password.error}
         <Field
           name='passwordConfirm'
           type='password'
           component={renderField}
           label='Confirm Password:'
         />
-        {loginErrorText()}
-        <input
-          type='submit'
-          className='button'
-          value='Sign Up'
-          disabled={valid === false ? 'disabled' : ''}
-        />
+        {loginErrorText()}*/}
       </form>
     )
   }
 }
 
-// RegisterComponent.propTypes = {
+// ReviewForm.propTypes = {
 //   handleSubmit: PropTypes.func.isRequired,
 //   actions: PropTypes.object,
 //   errorMessage: PropTypes.string
@@ -92,7 +118,7 @@ export class RegisterComponent extends Component {
 function validate (formProps) {
   let errors = {}
 
-  const requiredFields = ['email', 'password', 'passwordConfirm']
+  const requiredFields = ['rating', 'text']
 
   requiredFields.forEach(field => {
     if (!formProps[field]) {
@@ -100,30 +126,18 @@ function validate (formProps) {
     }
   })
 
-  if (!formProps.email) {
-    errors.email = 'Required'
-  } else if (
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formProps.email)
-  ) {
-    errors.email = 'Invalid email address'
-  }
-
-  if (formProps.password !== formProps.passwordConfirm) {
-    errors.passwordConfirm = 'Passwords Must Match'
-  }
-
   return errors
 }
 
-const RegisterForm = reduxForm({
+const ReviewReduxForm = reduxForm({
   form: 'register',
   validate
-})(RegisterComponent)
+})(ReviewForm)
 
 const mapDispatchToProps = dispatch => {
   return {
-    authenticateUser: bindActionCreators(authenticateUser, dispatch),
-    saveUserToRedux: bindActionCreators(saveUserToRedux, dispatch)
+    addRating: bindActionCreators(addRating, dispatch),
+    addRatingToStore: bindActionCreators(addRatingToStore, dispatch)
   }
 }
 
@@ -135,4 +149,4 @@ const mapDispatchToProps = dispatch => {
 
 // };
 
-export default connect(null, mapDispatchToProps)(RegisterForm)
+export default connect(null, mapDispatchToProps)(ReviewReduxForm)

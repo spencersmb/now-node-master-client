@@ -11,6 +11,12 @@ export const storeReducer = (state = initialState.stores, action) => {
       return [...action.store]
     // case actionTypes.GET_SINGLE_STORE:
     //   return [...state, action.data]
+    case actionTypes.ADD_RATING_STORE:
+      return state.map((item, index) => {
+        if (item._id === action.payload.storeId) {
+          item.reviews.push(action.payload.review)
+        }
+      })
     case actionTypes.UPDATE_STORE_DATA:
       let newState = state
       state.forEach((item, index) => {

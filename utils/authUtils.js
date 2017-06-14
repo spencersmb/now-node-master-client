@@ -4,7 +4,8 @@ import {
   logUserOut,
   refreshTokenAction,
   logOut,
-  saveUserToRedux
+  saveUserToRedux,
+  getUserHearts
 } from '../actions/authActions'
 import envConfig from '../config/envConfig'
 
@@ -51,6 +52,9 @@ export const getTokenFromCookie = req => {
  * @returns {JWT-Token}
  */
 export const getTokenFromCookieRes = cookies => {
+  if (!cookies) {
+    return undefined
+  }
   return cookies[0]
     .split(';')
     .find(c => c.trim().startsWith('jwt='))
@@ -119,7 +123,11 @@ export const convertResCookiesToString = cookies => {
  * @returns {Cookie key/value [array]}
  */
 export const findCookies = (ctxHeaders, ctxReq) => {
-  if (ctxHeaders === undefined) {
+  if (!ctxReq) {
+    return undefined
+  }
+
+  if (!ctxHeaders) {
     return ctxReq.headers.cookie
   }
   const cookies = getCookiesFromServerResponse(ctxHeaders)
@@ -248,7 +256,7 @@ export const validateUserTokenClient = async (store, user) => {
  * @returns {Dispatch Action: logUserOut} (expired)
  * @returns {Dispatch Action: saveUserToRedux}
  */
-export const validateUserTokenServer = async (store, user) => {
+export const validateUserTokenServer = async (store, user, cookies) => {
   /*
   * find cookies on browser(jwt)
   * find user from token and pass user in to this function from getInitialProps on HOC
@@ -268,5 +276,7 @@ export const validateUserTokenServer = async (store, user) => {
   */
   console.log('save user')
 
+  // example of getting meta data
+  await store.dispatch(getUserHearts(cookies))
   store.dispatch(saveUserToRedux(user))
 }

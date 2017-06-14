@@ -5,10 +5,12 @@ import withRedux from 'next-redux-wrapper'
 import standardLayout from '../../hocs/standardLayout'
 import { getSingleStore, getStores } from '../../actions/storesActions'
 import { handleError, findCookies } from '../../utils/authUtils'
+import ReviewReduxForm from '../../components/stores/reviewForm'
+import ReviewList from '../../components/stores/reviews/reviewList'
 
 const pageTitle = 'Our Store'
 
-//this works but not on server side....
+// this works but not on server side....
 // On secure HOC - ComponentDid mount must check if user logged in. Our Error hander will just log user out,
 // but the HOC will reRoute
 
@@ -48,10 +50,23 @@ class StorePage extends React.Component {
   }
 
   render () {
-    const { name, slug, tags } = this.props.post
+    const { user } = this.props
+    const { name, slug, tags, _id, reviews } = this.props.post
+    const showReviewForm = () => {
+      if (user.isAuthenticated) {
+        return <ReviewReduxForm postId={_id} />
+      }
+    }
+    const hasReviews = () => {
+      if (reviews) {
+        return <ReviewList reviews={reviews} />
+      }
+    }
+
     const photo = this.props.post.photo || '/static/images/photos/store.png'
     return (
       <div>
+
         <div className='single'>
           <div className='single__hero'>
             <img className='single__image' src={photo} />
@@ -63,6 +78,7 @@ class StorePage extends React.Component {
           </div>
 
         </div>
+
         <div className='single__details inner'>
           <img
             src='/static/images/photos/static-map.png'
@@ -86,10 +102,18 @@ class StorePage extends React.Component {
               ))}
           </ul>
 
+          {showReviewForm()}
+          {hasReviews()}
+
         </div>
+
       </div>
     )
   }
 }
 
-export default withRedux(initStore)(standardLayout(StorePage, pageTitle))
+const mapStateToProps = ({ user }) => ({ user })
+
+export default withRedux(initStore, mapStateToProps)(
+  standardLayout(StorePage, pageTitle)
+)

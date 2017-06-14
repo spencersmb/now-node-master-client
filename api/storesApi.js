@@ -37,7 +37,18 @@ class StoreApi {
      */
     return body
   }
-
+  static async addRating (rating) {
+    const url = `${env.BACKEND_URL}/api/reviews/`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rating),
+      credentials: 'include' // Don't forget to specify this if you need cookies
+    })
+    return response
+  }
   static async getFavoriteStores (cookies = null) {
     const url = `${env.BACKEND_URL}/api/stores/fav`
 

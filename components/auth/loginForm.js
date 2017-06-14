@@ -2,7 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Field, reduxForm, reset } from 'redux-form'
-import { signinUser, saveUserToRedux } from '../../actions/authActions'
+import {
+  signinUser,
+  saveUserToRedux,
+  getUserHearts
+} from '../../actions/authActions'
 import { toastr } from 'react-redux-toastr'
 import Router from 'next/router'
 import { getUserFromJWT } from '../../utils/authUtils'
@@ -16,7 +20,8 @@ class LoginFormComponent extends React.Component {
   async handleFormSubmit ({ email, password }) {
     try {
       const response = await this.props.signinUser({ email, password })
-      const user = getUserFromJWT(response)
+      const user = getUserFromJWT(response.token)
+      user.hearts = response.hearts
       this.props.saveUser(user)
       toastr.success('Success:', user.name + ' Logged In!')
       Router.push(`/stores`)
@@ -83,7 +88,8 @@ class LoginFormComponent extends React.Component {
 const mapDispatchToProps = dispatch => {
   return {
     signinUser: bindActionCreators(signinUser, dispatch),
-    saveUser: bindActionCreators(saveUserToRedux, dispatch)
+    saveUser: bindActionCreators(saveUserToRedux, dispatch),
+    getUserHearts: bindActionCreators(getUserHearts, dispatch)
   }
 }
 

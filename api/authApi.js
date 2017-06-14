@@ -2,6 +2,22 @@ import fetch from 'isomorphic-unfetch'
 import env from '../config/envConfig'
 
 class authApi {
+  static async getUserHearts (cookies = undefined) {
+    const url = `${env.BACKEND_URL}/api/account/favs`
+    if (!cookies) {
+      return fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      })
+    }
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        cookie: cookies
+      },
+      credentials: 'include'
+    })
+  }
   static async signInUser (user) {
     const url = `${env.BACKEND_URL}/api/signin`
     return fetch(url, {

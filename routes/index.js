@@ -89,7 +89,7 @@ exports.routes = (expressServer, app, handle) => {
     return app.render(req, res, '/store/edit', req.query)
   })
 
-  expressServer.get('/store/:slug', (req, res) => {
+  expressServer.get('/store/:slug', tokenCtrl.tokenRefreshCheck, (req, res) => {
     req.query = {
       slug: req.params.slug
     }

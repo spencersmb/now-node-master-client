@@ -41,14 +41,23 @@ export default function ({ dispatch }) {
       // console.log(action.type)
 
       if (body.token && action.type === 'LOG_USER_IN') {
+        // Currently this action has no reducer
         const newAction = {
           type: action.type,
-          data: body.token
+          data: {
+            token: body.token,
+            hearts: body.hearts
+          }
         }
 
         // Send through all the middlewares again
         dispatch(newAction)
-        return body.token
+
+        // MODIFY CREATE TO DO THE SAME THING WITH HEARTS
+        return {
+          token: body.token,
+          hearts: body.hearts
+        }
       }
 
       if (body.token && action.type === 'CREATE_USER') {

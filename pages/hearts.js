@@ -4,7 +4,7 @@ import { initStore } from '../store'
 import withRedux from 'next-redux-wrapper'
 import secureLayout from '../hocs/secureLayout'
 import StoresList from '../components/stores/storesList'
-import { getFavoriteStores } from '../actions/storesActions'
+import { getFavoriteStores, getStores } from '../actions/storesActions'
 import { findCookies } from '../utils/authUtils'
 
 const pageTitle = 'Favs'
@@ -15,9 +15,10 @@ class Favorites extends React.Component {
     // await store.dispatch(getStores())
     const headers = ctx.res ? ctx.res._headers : undefined
     try {
-      const stores = await ctx.store.dispatch(
-        getFavoriteStores(findCookies(headers, ctx.req))
-      )
+      // const stores = await ctx.store.dispatch(
+      //   getFavoriteStores(findCookies(headers, ctx.req))
+      // )
+      const stores = await ctx.store.dispatch(getStores())
       return { stores }
     } catch (e) {
       console.log('error in hearts.js', e)
@@ -30,7 +31,7 @@ class Favorites extends React.Component {
     return (
       <div>
         <h2 className='inner'>Favorite Stores</h2>
-        <StoresList filteredStores={stores} user={user} />
+        <StoresList user={user} favs='true' />
       </div>
     )
   }

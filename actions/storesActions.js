@@ -11,6 +11,22 @@ export const getTagsList = tag => async (dispatch, getState) => {
   }
 }
 
+export const addRating = rating => dispatch => {
+  const request = StoreApi.addRating(rating)
+
+  return dispatch({
+    type: actionTypes.ADD_RATING,
+    payload: request
+  })
+}
+
+export const addRatingToStore = (storeId, rating) => dispatch => {
+  return dispatch({
+    type: actionTypes.ADD_RATING_STORE,
+    payload: { storeId, rating }
+  })
+}
+
 export const getFavoriteStores = cookies => dispatch => {
   const request = StoreApi.getFavoriteStores(cookies)
 

@@ -83,6 +83,15 @@ export const resetPassword = passwordToken => dispatch => {
   })
 }
 
+export const getUserHearts = cookies => dispatch => {
+  const request = authApi.getUserHearts(cookies)
+
+  return dispatch({
+    type: actionTypes.GET_USER_HEARTS,
+    payload: request // request = Promise, must send data on key 'payload`
+  })
+}
+
 // export const refreshTokenActionServer = cookies => dispatch => {
 //   console.log('refreshtokenAction called')
 

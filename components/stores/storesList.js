@@ -4,7 +4,17 @@ import StoreCard from './storeCard'
 
 class storesList extends React.Component {
   renderStores () {
-    const { stores, filteredStores, user } = this.props
+    const { stores, filteredStores, user, favs } = this.props
+    if (favs === 'true') {
+      return stores
+        .filter(store => {
+          if (user.hearts.includes(store._id)) {
+            return store
+          }
+        })
+        .map(store => <StoreCard key={store._id} user={user} {...store} />)
+    }
+
     if (filteredStores) {
       return filteredStores.map(store => (
         <StoreCard key={store._id} user={user} {...store} />
