@@ -63,52 +63,61 @@ class StorePage extends React.Component {
       }
     }
 
-    const photo = this.props.post.photo || '/static/images/photos/store.png'
-    return (
-      <div>
+    const hasPost = () => {
+      if (name) {
+        return (
+          <div>
 
-        <div className='single'>
-          <div className='single__hero'>
-            <img className='single__image' src={photo} />
-            <h2 className='title title--single'>
-              <Link as={`/store/${slug}`} href={`/store/details?slug=${slug}`}>
-                <a>{name}</a>
-              </Link>
-            </h2>
-          </div>
-
-        </div>
-
-        <div className='single__details inner'>
-          <img
-            src='/static/images/photos/static-map.png'
-            alt='google placeholder'
-            className='single__map'
-          />
-          <p className='single__location'>Location of store</p>
-
-          <ul className='tags'>
-            {tags &&
-              tags.map((tag, index) => (
-                <li key={tag + index} className='tag'>
-                  <Link as={`/tags/${tag}`} href={`/tags?tag=${tag}`}>
-
-                    <a className='tag__link'>
-                      <span className='tag__text'>{tag}</span>
-                    </a>
-
+            <div className='single'>
+              <div className='single__hero'>
+                <img className='single__image' src={photo} />
+                <h2 className='title title--single'>
+                  <Link
+                    as={`/store/${slug}`}
+                    href={`/store/details?slug=${slug}`}
+                  >
+                    <a>{name}</a>
                   </Link>
-                </li>
-              ))}
-          </ul>
+                </h2>
+              </div>
 
-          {showReviewForm()}
-          {hasReviews()}
+            </div>
 
-        </div>
+            <div className='single__details inner'>
+              <img
+                src='/static/images/photos/static-map.png'
+                alt='google placeholder'
+                className='single__map'
+              />
+              <p className='single__location'>Location of store</p>
 
-      </div>
-    )
+              <ul className='tags'>
+                {tags &&
+                  tags.map((tag, index) => (
+                    <li key={tag + index} className='tag'>
+                      <Link as={`/tags/${tag}`} href={`/tags?tag=${tag}`}>
+
+                        <a className='tag__link'>
+                          <span className='tag__text'>{tag}</span>
+                        </a>
+
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+
+              {showReviewForm()}
+              {hasReviews()}
+
+            </div>
+
+          </div>
+        )
+      }
+    }
+
+    const photo = this.props.post.photo || '/static/images/photos/store.png'
+    return hasPost()
   }
 }
 

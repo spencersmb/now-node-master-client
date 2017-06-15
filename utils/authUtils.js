@@ -52,9 +52,13 @@ export const getTokenFromCookie = req => {
  * @returns {JWT-Token}
  */
 export const getTokenFromCookieRes = cookies => {
+  console.log('find error')
+  console.log(cookies)
+
   if (!cookies) {
     return undefined
   }
+
   return cookies[0]
     .split(';')
     .find(c => c.trim().startsWith('jwt='))
@@ -88,7 +92,6 @@ export const getCookiesFromServerResponse = ctxHeaders => {
  */
 export const findTokenToDecode = (ctxHeaders, ctxReq) => {
   const cookies = getCookiesFromServerResponse(ctxHeaders)
-  console.log('find token on server')
 
   if (cookies) {
     console.log('has new user')
