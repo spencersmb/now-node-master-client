@@ -11,6 +11,9 @@
     ],
     [
       "inline-react-svg"
+    ],
+    [
+      "transform-flow-strip-types"
     ]
   ],
   "retainLines": true

@@ -16,5 +16,10 @@
       "error",
       "prefer-single"
     ]
+  },
+  "settings": {
+    "flowtype": {
+      "onlyFilesWithFlowAnnotation": true
+    }
   }
 }
