@@ -25,7 +25,6 @@ const reviewList = ({ reviews }: Props) => {
   const renderStores = (): React.Element<*>[] | React.Element<*> => {
     if (reviews) {
       return reviews.map(review => {
-        review._id = 2
         return <Review key={review._id} {...review} />
       })
     }
@@ -37,10 +36,6 @@ const reviewList = ({ reviews }: Props) => {
       {renderStores()}
     </div>
   )
-}
-
-reviewList.PropTypes = {
-  reviews: []
 }
 
 export default connect()(reviewList)

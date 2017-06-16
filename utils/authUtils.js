@@ -58,6 +58,12 @@ export const getTokenFromCookieRes = cookies => {
   if (!cookies) {
     return undefined
   }
+  console.log('step1')
+
+  console.log(cookies[0])
+  console.log('step2')
+
+  console.log(cookies[0].split(';').find(c => c.trim().startsWith('jwt=')))
 
   return cookies[0]
     .split(';')
