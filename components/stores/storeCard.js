@@ -29,7 +29,16 @@ class StoreCard extends React.Component {
   }
 
   render () {
-    const { name, photo, slug, description, _id, author, user } = this.props
+    const {
+      name,
+      photo,
+      slug,
+      description,
+      _id,
+      author,
+      user,
+      reviews
+    } = this.props
     const photoUrl = photo || '/static/images/photos/store.png'
 
     const hasEdit = () => {
@@ -39,12 +48,25 @@ class StoreCard extends React.Component {
       return false
     }
 
+    const displayReviews = () => {
+      if (reviews) {
+        return (
+          <div className='store__action store__action--count'>
+            {renderSvg(svgs.Review)}
+            <span>{reviews.length}</span>
+          </div>
+        )
+      }
+    }
     const displayEditLink = () => {
       if (hasEdit()) {
         return (
-          <Link as={`/store/${_id}/edit`} href={`/store/edit?id=${_id}`}>
-            <a>{renderSvg(svgs.Pencil)}{name}</a>
-          </Link>
+          <div className='store__action store__action--edit'>
+
+            <Link as={`/store/${_id}/edit`} href={`/store/edit?id=${_id}`}>
+              <a>{renderSvg(svgs.Pencil)}{name}</a>
+            </Link>
+          </div>
         )
       }
     }
@@ -78,9 +100,8 @@ class StoreCard extends React.Component {
         <div className='store__hero'>
           <div className='store__actions'>
             {displayheart()}
-            <div className='store__action store__action--edit'>
-              {displayEditLink()}
-            </div>
+            {displayEditLink()}
+            {displayReviews()}
           </div>
           <img src={photoUrl} alt='' />
           <h2 className='title'>

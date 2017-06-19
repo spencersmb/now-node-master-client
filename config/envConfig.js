@@ -1,4 +1,3 @@
-import { svgs } from './svgs'
 const prod = process.env.NODE_ENV === 'production'
 const config = require('./config.json')
 
@@ -12,14 +11,6 @@ will still work in both Dev and Production
 export default {
   BACKEND_URL: prod ? config.PROD_URL : config.DEV_URL,
   WEBSITE_TITLE: 'Now Thats Delicious!',
-  LINKS: [
-    { slug: '/stores', title: 'Stores', icon: svgs.Store },
-    { slug: '/tags', title: 'Tags', icon: svgs.Tag },
-    { slug: '/other', title: 'Moment', icon: svgs.Top },
-    { slug: '/create', title: 'Add', icon: svgs.Add, authRequired: true }
-    // { slug: '/map', title: 'Map', icon: svgs.MapSvg }
-  ],
   REFRESH_WINDOW: config.REFRESH_WINDOW,
-  LOGO: svgs.Logo,
   TAGS: ['Wifi', 'Open Late', 'Family Friendly', 'Vegetarian', 'Licensed']
 }

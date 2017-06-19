@@ -4,12 +4,16 @@ const tokenUtils = require('../utils/serverUtilsTokens')
 const querystring = require('querystring')
 
 exports.routes = (expressServer, app, handle) => {
-  expressServer.get('/stores/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+  expressServer.get('/stores', tokenCtrl.tokenRefreshCheck, (req, res) => {
     return app.render(req, res, '/stores', req.query)
   })
 
-  expressServer.get('/other/', tokenCtrl.tokenRefreshCheck, (req, res) => {
+  expressServer.get('/other', tokenCtrl.tokenRefreshCheck, (req, res) => {
     return app.render(req, res, '/other', req.query)
+  })
+
+  expressServer.get('/top', tokenCtrl.tokenRefreshCheck, (req, res) => {
+    return app.render(req, res, '/top', req.query)
   })
 
   expressServer.get('/hearts', tokenCtrl.tokenRefreshCheck, (req, res) => {

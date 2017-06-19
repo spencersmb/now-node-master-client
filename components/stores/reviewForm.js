@@ -1,20 +1,27 @@
+// @flow
+
 import React, { Component } from 'react'
-import { Field, reduxForm, FieldArray } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import renderField from '../inputs/renderField'
 import { addRating, addRatingToStore } from '../../actions/storesActions'
 import { toastr } from 'react-redux-toastr'
-import Router from 'next/router'
-import createFragment from 'react-addons-create-fragment'
+import type { reduxForm as reduxFormType } from '../../flowTypes/reduxForm'
 
-export class ReviewForm extends Component {
-  constructor (props, context) {
-    super(props, context)
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
+type Props = {
+  addRating: Function,
+  postId?: string
+} & reduxFormType
+
+type ReviewSubmitProps = { text: string, rating: number, postId?: string }
+
+export class ReviewForm extends Component<void, Props, void> {
+  constructor (props: Props) {
+    super(props)
+    const self: any = this
+    self.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
-
-  async handleFormSubmit (formProps) {
+  async handleFormSubmit (formProps: ReviewSubmitProps) {
     console.log(formProps)
 
     formProps.postId = this.props.postId
@@ -57,18 +64,7 @@ export class ReviewForm extends Component {
   }
 
   render () {
-    const { handleSubmit, valid, errorMessage } = this.props
-    const loginErrorText = () => {
-      if (errorMessage) {
-        return (
-          <div className='bs-callout bs-callout-danger'>
-            <h4>
-              {errorMessage}
-            </h4>
-          </div>
-        )
-      }
-    }
+    const { handleSubmit, valid } = this.props
 
     return (
       <form className='reviewer' onSubmit={handleSubmit(this.handleFormSubmit)}>
@@ -89,33 +85,12 @@ export class ReviewForm extends Component {
             disabled={valid === false ? 'disabled' : ''}
           />
         </div>
-        {/*
-        <Field
-          name='password'
-          type='password'
-          component={renderField}
-          label='Password:'
-        />
-        {password.error}
-        <Field
-          name='passwordConfirm'
-          type='password'
-          component={renderField}
-          label='Confirm Password:'
-        />
-        {loginErrorText()}*/}
       </form>
     )
   }
 }
 
-// ReviewForm.propTypes = {
-//   handleSubmit: PropTypes.func.isRequired,
-//   actions: PropTypes.object,
-//   errorMessage: PropTypes.string
-// }
-
-function validate (formProps) {
+function validate (formProps: ReviewSubmitProps) {
   let errors = {}
 
   const requiredFields = ['rating', 'text']
