@@ -108,9 +108,9 @@ class StoreApi {
     return response
   }
 
-  static getStores () {
+  static getStores (page) {
     return new Promise((resolve, reject) => {
-      const url = `${env.BACKEND_URL}/api/stores`
+      const url = `${env.BACKEND_URL}/api/stores/${page}`
 
       fetch(url, {
         method: 'GET',
@@ -120,7 +120,7 @@ class StoreApi {
       })
         .then(r => r.json())
         .then(res => {
-          resolve(res.stores)
+          resolve(res)
         })
         .catch(e => {
           reject(e)

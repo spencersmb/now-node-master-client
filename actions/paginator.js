@@ -60,7 +60,7 @@ export const createPaginator = (endpoint, resultKey) => {
 
   // Reducer
   const currentPage = (currentPage = 1, action = {}) =>
-    (action.type === actionTypes.REQUEST_STORE_PAGE
+    (action.type === actionTypes.REQUEST_PAGE
       ? action.payload.page
       : currentPage)
 

@@ -22,7 +22,7 @@ const getLinks = isAuthenticated => {
     .map(link => {
       return (
         <li key={link.slug} className='nav__item'>
-          <Link prefetch key={link.slug} href={link.slug}>
+          <Link prefetch href={link.slug}>
             <a className='nav__link'>
               {renderSvg(link.icon)}
               <span>{link.title}</span>

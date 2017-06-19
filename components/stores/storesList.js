@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import StoreCard from './storeCard'
+import Pagination from '../nav/pagination'
 
 class storesList extends React.Component {
   renderStores () {
@@ -34,7 +35,8 @@ class storesList extends React.Component {
   render () {
     return (
       <div className='inner stores'>
-        {this.renderStores()}
+        <div className='stores'>{this.renderStores()}</div>
+        <Pagination />
       </div>
     )
   }
@@ -44,7 +46,7 @@ class storesList extends React.Component {
 const mapStateToProps = state => {
   return {
     pagination: state.pagination,
-    stores: state.stores,
+    stores: state.stores.data,
     user: state.user
   }
 }

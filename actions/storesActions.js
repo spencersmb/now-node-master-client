@@ -56,18 +56,18 @@ export const getSingleStore = slug => async (dispatch, getState) => {
   })
 }
 
-export const getStores = () => (dispatch, getState) => {
-  const state = getState()
+export const getStores = page => (dispatch, getState) => {
+  // const state = getState()
 
-  if (state.stores.length > 1) {
-    console.log('stores cached')
-    dispatch(loadStoresSuccess(state.stores))
-    return
-  }
+  // if (state.stores.length > 1) {
+  //   console.log('stores cached')
+  //   dispatch(loadStoresSuccess(state.stores))
+  //   return
+  // }
 
-  return StoreApi.getStores()
-    .then(stores => {
-      return dispatch(loadStoresSuccess(stores))
+  return StoreApi.getStores(page)
+    .then(response => {
+      return dispatch(loadStoresSuccess(response))
     })
     .catch(e => {})
 }
@@ -152,10 +152,17 @@ export const updateStoreSuccess = store => {
   }
 }
 
-export const loadStoresSuccess = stores => {
+export const loadStoresSuccess = response => {
   return {
     type: actionTypes.LOAD_STORES_SUCCESS,
-    stores
+    data: response
+  }
+}
+
+export const loadTotalStores = count => {
+  return {
+    type: actionTypes.LOAD_TOTAL_STORES,
+    count
   }
 }
 

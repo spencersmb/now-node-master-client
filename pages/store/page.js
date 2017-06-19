@@ -1,12 +1,12 @@
 import React from 'react'
-import { initStore } from '../store'
+import { initStore } from '../../store'
 // import { bindActionCreators } from 'redux'
 import withRedux from 'next-redux-wrapper'
-import standardLayout from '../hocs/standardLayout'
-import StoresList from '../components/stores/storesList'
-import { getStores } from '../actions/storesActions'
+import standardLayout from '../../hocs/standardLayout'
+import StoresList from '../../components/stores/storesList'
+import { getStores } from '../../actions/storesActions'
 // import { requestStorePage, receiveStorePage } from '../actions/pagination'
-import { pagination } from '../reducers/pageReducer'
+import { pagination } from '../../reducers/pageReducer'
 
 const pageTitle = 'Our Store'
 

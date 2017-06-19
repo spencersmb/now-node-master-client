@@ -4,9 +4,21 @@ const tokenUtils = require('../utils/serverUtilsTokens')
 const querystring = require('querystring')
 
 exports.routes = (expressServer, app, handle) => {
-  expressServer.get('/stores', tokenCtrl.tokenRefreshCheck, (req, res) => {
-    return app.render(req, res, '/stores', req.query)
-  })
+  expressServer.get(
+    '/stores/page/:pageId*?',
+    tokenCtrl.tokenRefreshCheck,
+    (req, res) => {
+      req.query = {
+        pageId: req.params.pageId
+      }
+      return app.render(req, res, '/store/page', req.query)
+    }
+  )
+
+  // I think TOP level pages dont need a link
+  // expressServer.get('/stores', tokenCtrl.tokenRefreshCheck, (req, res) => {
+  //   return app.render(req, res, '/stores', req.query)
+  // })
 
   expressServer.get('/other', tokenCtrl.tokenRefreshCheck, (req, res) => {
     return app.render(req, res, '/other', req.query)

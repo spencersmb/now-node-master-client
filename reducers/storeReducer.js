@@ -7,7 +7,7 @@ export const storeReducer = (state = initialState.stores, action) => {
       return [action.store, ...state]
     case actionTypes.LOAD_STORES_SUCCESS:
       let _stores = {}
-      for (let store of action.stores) {
+      for (let store of action.data.stores) {
         _stores = {
           ..._stores,
           [store._id]: store
@@ -15,7 +15,8 @@ export const storeReducer = (state = initialState.stores, action) => {
       }
       return {
         ...state,
-        ..._stores
+        data: { ..._stores },
+        count: action.data.count
       }
     case actionTypes.LOAD_SINGLE_STORE_SUCCESS:
       return [...action.store]

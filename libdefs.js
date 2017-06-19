@@ -16,3 +16,6 @@ declare module 'moment' {
 declare module 'next-redux-wrapper' {
   declare var exports: any
 }
+declare module 'next/link' {
+  declare var exports: any
+}
