@@ -4,7 +4,10 @@ import StoreCard from './storeCard'
 
 class storesList extends React.Component {
   renderStores () {
-    const { stores, filteredStores, user, favs } = this.props
+    const { stores, filteredStores, user, favs, pagination } = this.props
+    const currentPage = pagination.currentPage
+    const pages = pagination.pages.stores
+
     if (favs === 'true') {
       return stores
         .filter(store => {
@@ -21,9 +24,11 @@ class storesList extends React.Component {
       ))
     }
 
-    return stores.map(store => (
-      <StoreCard key={store._id} user={user} {...store} />
-    ))
+    return pages[currentPage].ids.map(storeId => {
+      return (
+        <StoreCard key={stores[storeId]._id} user={user} {...stores[storeId]} />
+      )
+    })
   }
 
   render () {
@@ -38,6 +43,7 @@ class storesList extends React.Component {
 // const mapStateToProps = ({ stores }) => ({ stores })
 const mapStateToProps = state => {
   return {
+    pagination: state.pagination,
     stores: state.stores,
     user: state.user
   }

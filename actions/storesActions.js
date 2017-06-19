@@ -67,7 +67,7 @@ export const getStores = () => (dispatch, getState) => {
 
   return StoreApi.getStores()
     .then(stores => {
-      dispatch(loadStoresSuccess(stores))
+      return dispatch(loadStoresSuccess(stores))
     })
     .catch(e => {})
 }

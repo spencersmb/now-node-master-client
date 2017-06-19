@@ -6,7 +6,17 @@ export const storeReducer = (state = initialState.stores, action) => {
     case actionTypes.SAVE_STORE:
       return [action.store, ...state]
     case actionTypes.LOAD_STORES_SUCCESS:
-      return [...action.stores]
+      let _stores = {}
+      for (let store of action.stores) {
+        _stores = {
+          ..._stores,
+          [store._id]: store
+        }
+      }
+      return {
+        ...state,
+        ..._stores
+      }
     case actionTypes.LOAD_SINGLE_STORE_SUCCESS:
       return [...action.store]
     // case actionTypes.GET_SINGLE_STORE:

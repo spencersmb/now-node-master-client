@@ -55,7 +55,7 @@ export const getTokenFromCookieRes = cookies => {
   console.log('find error')
   console.log(cookies)
 
-  if (!cookies) {
+  if (!cookies || !cookies[0]) {
     return undefined
   }
   console.log('step1')

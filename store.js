@@ -9,9 +9,16 @@ import { reducer as toastrReducer } from 'react-redux-toastr'
 import { editStoreReducer } from './reducers/editStoreReducer'
 import { editAccountReducer } from './reducers/editAccountReducer'
 import { tagsReducer } from './reducers/tagsReducer'
+// import { pages, currentPage } from './reducers/pageReducer'
 import apiIntercepter from './middleware/apiIntercepter'
+import { pagination } from './reducers/pageReducer'
 
 export const initStore = (initialState = {}) => {
+  // const pagination = combineReducers({
+  //   pages,
+  //   currentPage
+  // })
+
   // mirror of state from original app
   const reducers = combineReducers({
     user: authReducer,
@@ -21,7 +28,8 @@ export const initStore = (initialState = {}) => {
     userAccount: editAccountReducer,
     filtered: tagsReducer,
     toastr: toastrReducer,
-    time: timeReducer
+    time: timeReducer,
+    pagination: pagination.reducer
   })
 
   let env = process.env.NODE_ENV || 'development'
