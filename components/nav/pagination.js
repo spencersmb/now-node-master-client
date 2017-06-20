@@ -5,22 +5,21 @@ import Link from 'next/link'
 const mapStateToProps = (state, ownProps) => {
   return {
     // stores: state.stores.data,
-    totalStores: state.stores.count,
+    pages: state.stores.pages,
     pagination: state.pagination.pages.stores,
     currentPage: state.pagination.currentPage
   }
 }
 
 export default connect(mapStateToProps)(props => {
-  const { totalStores, pagination, currentPage } = props
-  const storesPerPage = pagination[currentPage].ids.length
-  const totalPages = totalStores / storesPerPage
+  const { pages, currentPage } = props
 
-  const nextButton = (currentPage, totalStores) => {
-    if (currentPage < totalStores) {
+  const nextButton = () => {
+    if (currentPage < pages) {
       return (
         <div className='pagination__next'>
           <Link
+            prefetch
             as={`/stores/page/${parseInt(currentPage) + 1}`}
             href={`/store/page?pageId=${parseInt(currentPage) + 1}`}
           >
@@ -48,8 +47,8 @@ export default connect(mapStateToProps)(props => {
   return (
     <div className='pagination'>
       {prevButton()}
-      <div className='pagination__text'>Page {currentPage} of {totalPages}</div>
-      {nextButton(currentPage, totalPages)}
+      <div className='pagination__text'>Page {currentPage} of {pages}</div>
+      {nextButton()}
     </div>
   )
 })

@@ -16,7 +16,7 @@ export const storeReducer = (state = initialState.stores, action) => {
       return {
         ...state,
         data: { ..._stores },
-        count: action.data.count
+        pages: action.data.totalPages
       }
     case actionTypes.LOAD_SINGLE_STORE_SUCCESS:
       return [...action.store]

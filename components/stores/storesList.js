@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import StoreCard from './storeCard'
-import Pagination from '../nav/pagination'
 
 class storesList extends React.Component {
   renderStores () {
@@ -34,9 +33,8 @@ class storesList extends React.Component {
 
   render () {
     return (
-      <div className='inner stores'>
+      <div className='inner'>
         <div className='stores'>{this.renderStores()}</div>
-        <Pagination />
       </div>
     )
   }

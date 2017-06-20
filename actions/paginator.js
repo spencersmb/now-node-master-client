@@ -1,5 +1,6 @@
 import actionTypes from './actionTypes'
 import { combineReducers } from 'redux'
+import StoreApi from '../api/storesApi'
 
 export const createPaginator = (endpoint, resultKey) => {
   // action
@@ -29,7 +30,6 @@ export const createPaginator = (endpoint, resultKey) => {
       }
     }
   }
-
   // Reducer
   const pages = (pages = {}, action = {}) => {
     switch (action.type) {
@@ -46,7 +46,7 @@ export const createPaginator = (endpoint, resultKey) => {
       case actionTypes.RECEIVE_PAGE:
         return {
           ...pages,
-          [action.meta.resultKey]: {
+          [resultKey]: {
             [action.payload.page]: {
               ids: action.payload.results.map(store => store._id),
               fetching: false
