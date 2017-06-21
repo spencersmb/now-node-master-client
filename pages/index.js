@@ -6,6 +6,9 @@ import withRedux from 'next-redux-wrapper'
 import styled, { css } from 'styled-components'
 import standardLayout from '../hocs/standardLayout'
 import StoresList from '../components/stores/storesList'
+import { getStores } from '../actions/storesActions'
+import { pagination } from '../reducers/pageReducer'
+import Pagination from '../components/nav/pagination'
 // const rule1 = {
 //   backgroundColor: 'blue',
 //   '@media screen and (min-width: 250px)': {
@@ -59,6 +62,23 @@ const Div = styled.div`
 const pageTitle = 'Our Store'
 
 class Counterfirst extends React.Component {
+  static async getInitialProps (ctx) {
+    const page = ctx.query.pageId ? ctx.query.pageId : 1
+
+    /*
+    PAGINATION:
+    - Dispatch page request and set loading to true
+    - Get stores + page count - does not use redux middlewear method(errors)
+    - set redux with pagination Data
+    */
+    ctx.store.dispatch(pagination.requestPage('/stores', 'stores', page))
+    const response = await ctx.store.dispatch(getStores(page))
+    ctx.store.dispatch(
+      pagination.receivePage('stores', page, response.data.stores)
+    )
+
+    return {}
+  }
   render () {
     return (
       <div className='inner'>
@@ -67,7 +87,7 @@ class Counterfirst extends React.Component {
         </Div>
 
         <StoresList />
-
+        <Pagination />
       </div>
     )
   }
