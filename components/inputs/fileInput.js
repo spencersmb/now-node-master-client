@@ -4,6 +4,7 @@ import React from 'react'
 class renderDropzoneInput extends React.Component {
   constructor (props) {
     super(props)
+    console.log('props', props)
 
     this.state = { preview: null }
     this.handleDropRejected = this.handleDropRejected.bind(this)
